@@ -10,6 +10,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import UserDashBoard from './pages/UserPages/DashBoard';
 import AdminDashBoard from './pages/AdminPages/DashBoard';
 import TeamPage from './pages/UserPages/Team';
+import Leaderboard from './pages/LeaderBoard';
+import BudgetManagement from './pages/UserPages/Budget';
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 axios.defaults.withCredentials = true;
@@ -28,6 +30,8 @@ export default function App() {
 
         <Route path="/user/dashboard" element={<UserDashBoard />} />
         <Route path="/user/team" element={<TeamPage />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/user/budget-management" element={<BudgetManagement />} />
 
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>

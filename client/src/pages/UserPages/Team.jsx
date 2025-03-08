@@ -19,9 +19,7 @@ const TeamPage = () => {
         { id: 8, name: 'Hardik Pandya', university: 'University H', value: '$1.7M', category: 'All-Rounders' },
         { id: 9, name: 'Ravindra Jadeja', university: 'University I', value: '$1.6M', category: 'All-Rounders' },
         { id: 10, name: 'Shreyas Iyer', university: 'University J', value: '$1.5M', category: 'All-Rounders' },
-
-        // Wicket-Keepers
-        { id: 11, name: 'MS Dhoni', university: 'University K', value: '$1.6M', category: 'Wicket-Keepers' },
+        { id: 11, name: 'MS Dhoni', university: 'University K', value: '$1.6M', category: 'All-Rounders' },
     ];
 
     // Group players by category
