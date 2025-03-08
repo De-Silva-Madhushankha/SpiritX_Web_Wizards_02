@@ -11,6 +11,7 @@ import playerRoutes from "./routes/playerRoutes.js";
 import statRoutes from "./routes/statRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -43,6 +44,8 @@ app.use("/api/player", playerRoutes);
 app.use("/api/overallstat", statRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
