@@ -42,8 +42,8 @@ const Navbar = () => {
                                 { href: "/user/players", text: "Players" },
                                 { href: "/user/stats", text: "Statistics" },
                                 { href: "/user/schedule", text: "Schedule" },
-                                { href: "/user/budget", text: "Budget" },
-                                { href: "/user/leaderboard", text: "Leaderboard" }
+                                { href: "/user/budget-management", text: "Budget" },
+                                { href: "/leaderboard", text: "Leaderboard" }
                             ].map(({ href, text }) => (
                                 <a key={href} href={href} className="px-3 py-2 rounded-md transition hover:text-blue-400 hover:bg-white/20">
                                     {text}
