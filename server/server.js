@@ -7,21 +7,14 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import playerRoutes from "./routes/playerRoutes.js";
 
-
 dotenv.config();
 const app = express();
-
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || "localhost";
 
-
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
+// Middleware
 app.use(express.json());
-
+app.use(cors());
 app.use(cookieParser());
 
 // MongoDB Connection
@@ -30,7 +23,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.error("MongoDB connection error:", error));
 
-
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/player", playerRoutes);
 
