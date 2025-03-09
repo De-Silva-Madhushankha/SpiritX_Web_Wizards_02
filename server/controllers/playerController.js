@@ -1,7 +1,8 @@
 import Player from "../models/playerModel.js";
 import { calculatePlayerStats } from "../utils/playerCalculations.js";
+import mongoose from "mongoose"; 
 
-// Get all players // Admin-E-1
+// Get all players // Admin-E-1 (postman checked)
 export const getPlayers = async (req, res) => {
     try {
         const players = await Player.find();
@@ -11,10 +12,12 @@ export const getPlayers = async (req, res) => {
     }
 };
 
-//get specific player //Admin-E-2 //Admin-M-2
+//get specific player //Admin-E-2 //Admin-M-2(postman checked)
 export const getPlayer = async (req, res) => {
     try {
       const playerId = req.params.id; // Get the player ID from the request parameters
+
+      console.log(playerId);
   
       // Find the player by ID in the database
       const player = await Player.findById(playerId);
@@ -22,9 +25,11 @@ export const getPlayer = async (req, res) => {
       if (!player) {
         return res.status(404).json({ message: "Player not found" });
       }
+
+      const playerData = player.toObject();
   
       // Calculate the player's stats
-      const playerStats = calculatePlayerStats(player);
+      const playerStats = calculatePlayerStats(playerData);
   
       // Return the player data along with the calculated stats
       res.status(200).json({
@@ -37,22 +42,50 @@ export const getPlayer = async (req, res) => {
     }
   };
 
-  // get player by category //User-E-4
+  // get player by category //User-E-4 (postman checked)
   export const getPlayersByCategory = async (req, res) => {
     try {
-      const { category } = req.params;
-      const players = await Player.find({ category }); // Get players in the selected category
+      const { category } = req.params;  // Fetch category from query parameters
+    
+      // Ensure category is provided
+      if (!category) {
+        return res.status(400).json({ message: "Category is required" });
+      }
+    
+      // Validate category (make sure it's one of the allowed values)
+      const validCategories = ["Batsman", "Bowler", "All-Rounder"];
+      if (!validCategories.includes(category)) {
+        return res.status(400).json({
+          message: `Category must be one of the following: ${validCategories.join(", ")}`
+        });
+      }
+    
+      // Find players by category (using correct query)
+      const players = await Player.find({ category });
+    
+      // If no players found, return a 404
+      if (players.length === 0) {
+        return res.status(404).json({ message: `No players found for category: ${category}` });
+      }
+    
+      // Return the list of players found
       res.status(200).json(players);
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+      // Log the error for debugging
+      console.error(error);
+    
+      // Return a generic server error message
+      res.status(500).json({ message: "Server error", error: error.message });
     }
   };
+  
+  
   
 
 
 
 
-// Create a new player// Admin-M-1
+// Create a new player// Admin-M-1   //(Postman checked)
 export const createPlayer = async (req, res) => {
   try {
     // Validation checks for required fields
@@ -76,29 +109,76 @@ export const createPlayer = async (req, res) => {
 };
 
 
-// Update player by ID //Admin-M-1
+// Update player by ID //Admin-M-1 (postman checked)
 export const updatePlayer = async (req, res) => {
     try {
-        const updatedPlayer = await Player.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedPlayer) {
-            return res.status(404).json({ msg: 'Player not found' });
+        const { id } = req.params;
+        console.log(id)
+        
+        //Validate if ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ msg: "Invalid Player ID" });
         }
-        res.json(updatedPlayer);
+        console.log("done")
+
+        console.log("Updating player with ID:", id);
+        console.log("Update data:", req.body);
+
+        // Update player and return new document
+        const updatedPlayer = await Player.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (!updatedPlayer) {
+            console.log("Player not found");
+            return res.status(404).json({ msg: "Player not found" });
+        }
+
+        console.log("Updated Player Data:", updatedPlayer);
+
+        // Convert Mongoose document to plain object
+        const playerData = updatedPlayer.toObject();
+
+        // Calculate updated player stats
+        const updatedStats = calculatePlayerStats(playerData);
+
+        res.status(200).json({
+            msg: "Player updated successfully",
+            player: updatedPlayer,
+            playerStats: updatedStats
+        });
     } catch (error) {
-        res.status(400).json({ msg: 'Failed to update player', error: error.message });
+        console.error("Error updating player:", error.message);
+        res.status(500).json({ msg: "Failed to update player", error: error.message });
     }
 };
 
-// Delete player by ID// Admin-M-1
+
+// Delete player by ID// Admin-M-1 (postman checked)
 export const deletePlayer = async (req, res) => {
     try {
-        const player = await Player.findByIdAndDelete(req.params.id);
-        if (!player) {
-            return res.status(404).json({ msg: 'Player not found' });
+        const { id } = req.params;
+
+        console.log(`Deleting player with ID: ${id}`);
+
+        // Validate if ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ msg: "Invalid Player ID" });
         }
-        res.json({ msg: 'Player deleted' });
+
+        // Find and delete the player
+        const player = await Player.findByIdAndDelete(id);
+
+        if (!player) {
+            console.log("Player not found");
+            return res.status(404).json({ msg: "Player not found" });
+        }
+
+        console.log("Player deleted successfully:", player);
+
+        res.status(200).json({ msg: "Player deleted successfully", deletedPlayer: player });
     } catch (error) {
-        res.status(500).json({ msg: 'Failed to delete player', error: error.message });
+        console.error("Error deleting player:", error.message);
+        res.status(500).json({ msg: "Failed to delete player", error: error.message });
     }
 };
+
 

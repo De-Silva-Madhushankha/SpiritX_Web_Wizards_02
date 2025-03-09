@@ -2,7 +2,8 @@ import Player from "../models/playerModel.js";
 //import { calculatePlayerStats } from "../utils/playerCalculations.js";
 
 
-// Get tournament stats  //Admin-E-3
+// Get tournament stats  //Admin-E-3 (postman checked)
+
 export const getTournamentStats = async (req, res) => {
     try {
       // Aggregate query to calculate overall stats

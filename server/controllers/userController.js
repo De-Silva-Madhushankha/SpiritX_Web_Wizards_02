@@ -1,15 +1,16 @@
 import Player from "../models/playerModel.js";
 import User from "../models/userModel.js"; 
 
-//user -E-2
+//user-E-2 (postman checked)
 export const getAvailablePlayers = async (req, res) => {
   try {
-    const players = await Player.find({ teamId:"No Team" }); // Fetch only available players
+    const players = await Player.find({ teamId:null }); // Fetch only available players
     res.status(200).json(players);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 //User-M-2
 export const getUserRemainingBudget = async (req, res) => {

@@ -1,6 +1,12 @@
+
 export const calculatePlayerStats = (playerData) => {
     // Ensure playerData exists and has required fields
-    if (!playerData || !playerData.TotalRuns || !playerData.BallsFaced) {
+    console.log(playerData);
+    console.log(playerData.TotalRuns);
+    console.log(playerData.BallsFaced);
+
+    if (!playerData || !playerData.TotalRuns || !playerData.BallsFaced){
+    
         return {
             playerPoints: 0,
             playerValue: 0,
@@ -12,7 +18,7 @@ export const calculatePlayerStats = (playerData) => {
     }
 
     // Convert overs to balls (1 over = 6 balls)
-    const ballsBowled = playerData.OversBowled * 6;
+    const ballsBowled = playerData.OversBowled *6 ;
 
     // Batting Calculations
     const battingStrikeRate = playerData.BallsFaced > 0 
