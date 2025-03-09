@@ -1,5 +1,6 @@
 import express from "express";
-import { addPlayerToTeam, removePlayerFromTeam, calculateTeamPoints, getUserTeam ,getTeam , getCurrentTeam} from "../controllers/teamController.js";
+import { addPlayerToTeam, removePlayerFromTeam, calculateTeamPoints, getUserTeam ,getTeam , getCurrentTeam, getTeamRank} from "../controllers/teamController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -14,5 +15,11 @@ router.get("/:userId", getUserTeam);
 router.get("/finalTeam/:userId", getTeam);
 
 router.get("/currentTeam/:userId", getCurrentTeam);
+
+router.get("/teamRank", authMiddleware, getTeamRank);
+
+router.get("/" ,authMiddleware, (req, res) => {
+    res.send("Team routes");
+});
 
 export default router;

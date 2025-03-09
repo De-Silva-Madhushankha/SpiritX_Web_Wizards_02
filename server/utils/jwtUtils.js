@@ -19,17 +19,15 @@ export const generateTokenAndSetCookie = (userId, res) => {
 };
 
 // Verify JWT token
-export const verifyToken = (req, res, next) => {
-  const token = req.cookies.access_token;
+export const verifyToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded;
+  } catch (err) {
+    throw new Error('Invalid or expired token');
+  }
+};
 
-  if (!token) return next(errorHandler(401, 'Unauthorized!'));
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return next(errorHandler(403, 'Forbidden!'));
-    req.user = user;
-    next();
-  });
-}
 
 // Clear JWT token from cookie
 export const clearCookie = (res) => {
