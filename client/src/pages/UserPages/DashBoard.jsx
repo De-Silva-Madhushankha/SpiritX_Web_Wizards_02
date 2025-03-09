@@ -1,12 +1,15 @@
-import React from 'react'
-import Navbar from '../../components/Navbar'
-import { Trophy, MoveUp, MoveDown, Signal, CirclePlus, Wallet } from 'lucide-react'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import Navbar from '../../components/Navbar';
+import { Trophy, MoveUp, Signal, CirclePlus, Wallet } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const DashBoard = () => {
-
   const [teamRank, setTeamRank] = useState("");
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [teamValue, setTeamValue] = useState(0);
+  const [remainingBudget, setRemainingBudget] = useState(0);
+  const [recentPerformance, setRecentPerformance] = useState([]);
 
   useEffect(() => {
     const fetchTeamRank = async () => {
@@ -14,10 +17,10 @@ const DashBoard = () => {
         const response = await axios.get('/team/teamRank/', { withCredentials: true });
         console.log(response.data);
         const rank = response.data;
-        if (Array.isArray(data)) {
-          setTeamRank(data);
+        if (typeof rank === 'number') {
+          setTeamRank(rank);
         } else {
-          console.error('API response');
+          console.error('Unexpected API response');
           toast.error('Unexpected API response');
         }
       } catch (err) {
@@ -25,20 +28,57 @@ const DashBoard = () => {
         toast.error('Failed to fetch team rank');
       }
     };
+
+    const fetchTotalPoints = async () => {
+      try {
+        const response = await axios.get('/api/team/points/', { withCredentials: true });
+        setTotalPoints(response.data.totalPoints);
+      } catch (err) {
+        console.error('Error fetching total points:', err);
+        toast.error('Failed to fetch total points');
+      }
+    };
+
+    const fetchTeamValue = async () => {
+      try {
+        const response = await axios.get('/api/team/value/', { withCredentials: true });
+        setTeamValue(response.data.teamValue);
+      } catch (err) {
+        console.error('Error fetching team value:', err);
+        toast.error('Failed to fetch team value');
+      }
+    };
+
+    const fetchRemainingBudget = async () => {
+      try {
+        const response = await axios.get('/api/team/budget/', { withCredentials: true });
+        setRemainingBudget(response.data.remainingBudget);
+      } catch (err) {
+        console.error('Error fetching remaining budget:', err);
+        toast.error('Failed to fetch remaining budget');
+      }
+    };
+
+    const fetchRecentPerformance = async () => {
+      try {
+        const response = await axios.get('/api/team/recentPerformance/', { withCredentials: true });
+        setRecentPerformance(response.data.recentPerformance);
+      } catch (err) {
+        console.error('Error fetching recent performance:', err);
+        toast.error('Failed to fetch recent performance');
+      }
+    };
+
     fetchTeamRank();
+    fetchTotalPoints();
+    fetchTeamValue();
+    fetchRemainingBudget();
+    fetchRecentPerformance();
   }, []);
 
-
-  const totalPoints = axios.get('/api/team/points/:userId', { withCredentials: true }).then(res => res.data); 
-
-
-
-  const teamValue = 9.2;
-  const remainingBudget = 0.8;
-  
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="min-h-screen p-4 md:p-8"
         style={{
           backgroundImage: "url('/assets/bg.webp')",
@@ -60,7 +100,7 @@ const DashBoard = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h2 className="text-4xl font-bold text-gray-800">#42</h2>
+                <h2 className="text-4xl font-bold text-gray-800">#{teamRank}</h2>
                 <p className="text-sm text-green-500 mt-1 flex items-center">
                   <span className="mr-1">
                     <MoveUp size={15} />
@@ -79,7 +119,7 @@ const DashBoard = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h2 className="text-4xl font-bold text-gray-800">2,345</h2>
+                <h2 className="text-4xl font-bold text-gray-800">{totalPoints}</h2>
                 <p className="text-sm text-green-500 mt-1 flex items-center">
                   <span className="mr-1">
                     <MoveUp size={15} />
@@ -98,7 +138,7 @@ const DashBoard = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h2 className="text-4xl font-bold text-gray-800">$9.2M</h2>
+                <h2 className="text-4xl font-bold text-gray-800">${teamValue}M</h2>
                 <p className="text-sm text-green-500 mt-1 flex items-center">
                   <span className="mr-1">
                     <MoveUp size={15} />
@@ -117,7 +157,7 @@ const DashBoard = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h2 className="text-4xl font-bold text-gray-800">$0.8M</h2>
+                <h2 className="text-4xl font-bold text-gray-800">${remainingBudget}M</h2>
                 <p className="text-sm text-gray-500 mt-1">of $10M total</p>
               </div>
             </div>
@@ -129,38 +169,17 @@ const DashBoard = () => {
             <p className="text-sm text-gray-500 mb-6">Your team's performance in recent matches.</p>
 
             <div className="space-y-4">
-              {/* Match 12 */}
-              <div className="border-b border-gray-100 pb-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">Match 12: University A vs University B</h3>
-                    <p className="text-sm text-gray-500 mt-1">Mar 5, 2025</p>
+              {recentPerformance.map((match, index) => (
+                <div key={index} className="border-b border-gray-100 pb-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-semibold text-gray-800">{match.title}</h3>
+                      <p className="text-sm text-gray-500 mt-1">{match.date}</p>
+                    </div>
+                    <div className="text-xl font-bold text-sky-600">{match.points} pts</div>
                   </div>
-                  <div className="text-xl font-bold text-sky-600">120 pts</div>
                 </div>
-              </div>
-
-              {/* Match 11 */}
-              <div className="border-b border-gray-100 pb-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">Match 11: University C vs University D</h3>
-                    <p className="text-sm text-gray-500 mt-1">Mar 2, 2025</p>
-                  </div>
-                  <div className="text-xl font-bold text-sky-600">85 pts</div>
-                </div>
-              </div>
-
-              {/* Match 10 */}
-              <div>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">Match 10: University E vs University F</h3>
-                    <p className="text-sm text-gray-500 mt-1">Feb 28, 2025</p>
-                  </div>
-                  <div className="text-xl font-bold text-sky-600">145 pts</div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -168,7 +187,7 @@ const DashBoard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DashBoard
+export default DashBoard;
