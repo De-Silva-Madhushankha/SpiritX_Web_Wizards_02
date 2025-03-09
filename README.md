@@ -135,3 +135,28 @@ SpiritX_Web_Wizards_02, also known as **Spirit11**, is a fantasy cricket league 
 - **Tournament Management**: CRUD operations for managing tournaments.
 
 ## Directory Structure
+
+
+# Admin Dashboard 🎛️
+
+
+## Features ✨
+
+- **User Management** 👥: Add, edit, or remove players.
+- **Analytics** 📊: View system usage statistics and performance metrics.
+- **Settings** ⚙️: Configure system preferences and settings.
+
+## Getting Started 🚀
+
+To access the admin dashboard, follow these steps:
+
+1. Open your web browser 🌐.
+2. Navigate to the admin dashboard .
+3. Enter the login credentials provided below.
+
+## Login Credentials 🔐
+
+- **Email** 📧: `spirit@uom.lk`
+- **Password** 🔑: `hackmeifucam`
+
+
