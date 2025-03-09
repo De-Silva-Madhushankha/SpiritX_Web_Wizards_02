@@ -11,7 +11,8 @@ const playerSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true
+    required: true,
+    enum: ["Batsman", "Bowler", "All-Rounder"]
   },
   totalRuns: {
     type: Number,
@@ -40,7 +41,7 @@ const playerSchema = new mongoose.Schema({
   teamId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team", // Reference to the Team model
-    default:"No Team" // Player can exist without being assigned to a team
+    default: null // Player can exist without being assigned to a team
   }
 
 }

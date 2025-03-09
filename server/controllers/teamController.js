@@ -10,9 +10,11 @@ export const addPlayerToTeam = async (req, res) => {
       const { userId, playerId } = req.body;
   
       let team = await Team.findOne({ userId });
+      console.log(team);
       if (!team) {
         team = new Team({ userId, players: [] });
       }
+      console.log(team);
   
       // Check if player already exists in the team
       if (team.players.includes(playerId)) {
