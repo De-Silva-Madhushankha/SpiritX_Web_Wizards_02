@@ -85,57 +85,65 @@ export const addPlayerToTeam = async (req, res) => {
 export const removePlayerFromTeam = async (req, res) => {
   try {
     const { userId, playerId } = req.params;
-    
+
+    // Validate userId and playerId before querying
+    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(playerId)) {
+      return res.status(400).json({ message: "Invalid userId or playerId format" });
+    }
+
+    // Convert to ObjectId
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const playerObjectId = new mongoose.Types.ObjectId(playerId);
 
     // Find the user's team
-    const team = await Team.findOne({ userId });
+    const team = await Team.findOne({ userId: userObjectId });
     if (!team) {
       return res.status(404).json({ message: "Team not found" });
     }
 
-    // Find the player to calculate their value
-    const player = await Player.findById(playerId);
+    // Find the player
+    const player = await Player.findById(playerObjectId);
     if (!player) {
       return res.status(404).json({ message: "Player not found" });
     }
 
-    // Calculate the player's value using the existing stats calculation
-    const playerStats = calculatePlayerStats(player);
-    const playerValue = playerStats.playerValue; // Get the calculated player value
-      
-    const user = await User.findById(userId); // Assuming you have a User model
-    
+    // Find the user
+    const user = await User.findById(userObjectId);
     if (!user) {
-        return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
-    
 
-    // Remove the player from the team's players array
-    team.players = team.players.filter((id) => id.toString() !== playerId);
-    user.budget += playerValue; // Refund the player’s value to the team’s budget
+    // Check if the player is in the team
+    if (!team.players.includes(playerObjectId)) {
+      return res.status(400).json({ message: "Player is not in the team" });
+    }
 
-    console.log(playerValue);
+    // Calculate the player's value
+    const playerStats = calculatePlayerStats(player);
+    const playerValue = playerStats.playerValue;
 
-    console.log(team.players);
-    console.log(user.budget);
+    // Remove the player from the team
+    team.players = team.players.filter((id) => id.toString() !== playerObjectId.toString());
 
-    // Update the player's teamId to null (indicating no team)
-    player.teamId =null;
+    // Refund the player's value to the user's budget
+    user.budget += playerValue;
 
+    // Set the player's teamId to null
+    player.teamId = null;
+
+    // Save updates
     await user.save();
-
-    await player.save(); // Save the updated player
-
-    // Save the updated team
+    await player.save();
     await team.save();
 
-    // Return the updated team and player details
+    // Return success response
     res.status(200).json({ message: "Player removed from team", team });
+
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Error removing player from team:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 
   
