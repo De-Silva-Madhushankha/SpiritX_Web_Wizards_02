@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { sendOTP, verifyOTP, resetPassword } from '../features/auth/authActions';
+import { sendOTP, verifyOTP, resetPassword } from '../../features/auth/authActions';
 import { toast } from 'react-toastify';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -68,7 +68,7 @@ const ForgotPassword = () => {
             return;
         }
 
-        if (password.length > 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        if (password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
             strength = 'strong';
         } else if (password.length >= 6) {
             strength = 'medium';
@@ -89,7 +89,7 @@ const ForgotPassword = () => {
     };
 
     // Password validation
-    const validatePassword = () => {
+    const validatePassword = (password) => {
         let valid = true;
         let error = '';
 
@@ -119,15 +119,15 @@ const ForgotPassword = () => {
     };
 
     // Confirm password validation
-    const validateConfirmPassword = () => {
+    const validateConfirmPassword = (confirmPassword) => {
         if (!confirmPassword.trim()) {
-            setPasswordErrors({ confirmPassword: 'Confirm password is required' });
+            setPasswordErrors({ ...passwordErrors, confirmPassword: 'Confirm password is required' });
             return false;
         } else if (password !== confirmPassword) {
-            setPasswordErrors({ confirmPassword: 'Passwords do not match' });
+            setPasswordErrors({ ...passwordErrors, confirmPassword: 'Passwords do not match' });
             return false;
         } else {
-            setPasswordErrors({ confirmPassword: '' });
+            setPasswordErrors({ ...passwordErrors, confirmPassword: '' });
             return true;
         }
     };
@@ -149,11 +149,11 @@ const ForgotPassword = () => {
                 break;
             case 'password':
                 setPassword(value);
-                validatePassword();
+                validatePassword(value);
                 break;
             case 'confirmPassword':
                 setConfirmPassword(value);
-                validateConfirmPassword();
+                validateConfirmPassword(value);
                 break;
             default:
                 break;
