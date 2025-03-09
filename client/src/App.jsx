@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import NotFound from './pages/NotFound';
 import SignIn from './pages/Auth/SignIn';
@@ -17,6 +17,15 @@ import SearchPlayers from './pages/UserPages/Players';
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 axios.defaults.withCredentials = true;
 
+const PrivateLayout = () => {
+  return (
+    <>
+      <Outlet />
+      <Spiriter />
+    </>
+  );
+};
+
 export default function App() {
   return (
     <>
@@ -31,15 +40,16 @@ export default function App() {
 
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
-          <Route path="/user/dashboard" element={<UserDashBoard />} />
-          <Route path="/user/team" element={<TeamPage />} />
-          <Route path="/user/leaderboard" element={<Leaderboard />} />
-          <Route path="/user/budget-management" element={<BudgetManagement />} />
-          <Route path="/user/search-players" element={<SearchPlayers />} />
+          <Route element={<PrivateLayout />}>
+            <Route path="/user/dashboard" element={<UserDashBoard />} />
+            <Route path="/user/team" element={<TeamPage />} />
+            <Route path="/user/leaderboard" element={<Leaderboard />} />
+            <Route path="/user/budget-management" element={<BudgetManagement />} />
+            <Route path="/user/search-players" element={<SearchPlayers />} />
+          </Route>
         </Route>
 
       </Routes>
-      <Spiriter />
 
       <ToastContainer
         position="top-right"
