@@ -33,24 +33,6 @@ export const checkUsername = async (req, res, next) => {
   }
 }
 
-export const checkUsername = async (req, res, next) => {
-  try {
-    const { username } = req.query;
-    const user = await User
-      .findOne({ username })
-      .select('username');
-
-    if (user) { 
-      res.status(200).json({ available: false });
-    } else {
-      res.status(200).json({ available: true });
-    }   
-  }
-  catch (error) {
-    next(error);
-  }
-}
-
 export const signup = async (req, res, next) => {
 
   try {
