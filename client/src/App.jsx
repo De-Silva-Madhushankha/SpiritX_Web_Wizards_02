@@ -9,9 +9,13 @@ import PrivateRoute from './components/PrivateRoute';
 import ForgotPassword from './pages/ForgotPassword';
 import UserDashBoard from './pages/UserPages/DashBoard';
 import AdminDashBoard from './pages/AdminPages/DashBoard';
+<<<<<<< HEAD
+import Spiriter from './pages/Spiriter/Spiriter';
+=======
 import TeamPage from './pages/UserPages/Team';
 import Leaderboard from './pages/LeaderBoard';
 import BudgetManagement from './pages/UserPages/Budget';
+>>>>>>> f2105e0ddf3585abb67975cd8298e600cadb8238
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 axios.defaults.withCredentials = true;
@@ -29,9 +33,13 @@ export default function App() {
         <Route path="/*" element={<NotFound />} />
 
         <Route path="/user/dashboard" element={<UserDashBoard />} />
+<<<<<<< HEAD
+        <Route path="/spiriter" element={<Spiriter />} />
+=======
         <Route path="/user/team" element={<TeamPage />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/user/budget-management" element={<BudgetManagement />} />
+>>>>>>> f2105e0ddf3585abb67975cd8298e600cadb8238
 
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
