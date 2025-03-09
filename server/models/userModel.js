@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     default: "user", // "user" or "admin"
     Enum : ["user","admin"]
   },
-  email: {
+  email:{
     type: String,
     unique: true,
     required: true,
@@ -31,10 +31,6 @@ const userSchema = new mongoose.Schema({
   points: {
     type: Number,
     default: 0, // Points will be calculated when the team is complete
-  },
-  team: {
-    type: Array,
-    default: [], // Array of player IDs
   },
 });
 
