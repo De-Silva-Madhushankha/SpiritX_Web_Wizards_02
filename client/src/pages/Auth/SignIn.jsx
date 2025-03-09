@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../features/auth/authActions';
 import { Link, useNavigate } from 'react-router-dom';
@@ -102,11 +102,7 @@ const SignIn = () => {
 
       if (result.payload.success) {
         toast.success('Signin successful!');
-        if(result.payload.user.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/user/dashboard');
-        }
+        navigate('/user/dashboard');
       } else {
         // Handle incorrect username/password
         if (result.error.includes('username')) {
