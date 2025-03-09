@@ -2,7 +2,7 @@ import Fuse from 'fuse.js';
 import axios from 'axios';
 import Player from "../models/playerModel.js";
 import natural from 'natural';
-
+import dotenv from "dotenv";
 
 let players = [];
 const tokenizer = new natural.WordTokenizer();
@@ -72,7 +72,7 @@ const chatBotController = async (req, res) => {
             prompt2 += ` ${count}: ${player.name},\n`;});
 
             console.log(prompt2);
-            const response = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyA5g46rDWh711tWzsqvYp9UYcoYMs2u4Q4', {
+            const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API}`, {
                 system_instruction: {
                     parts: [{ 
                         text: `You are a cricket expert chatbot designed to provide information in a natural, human-like manner.
