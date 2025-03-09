@@ -3,8 +3,14 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import http from "http"; // Import http module to integrate Socket.IO with Express
+import { Server } from "socket.io"; // Correct import for socket.io
 
-//import authRoutes from "./routes/authRoutes.js";
+// Importing routes
+import statRoutes from "./routes/statRoutes.js";
+import teamRoutes from "./routes/teamRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import playerRoutes from "./routes/playerRoutes.js";
 import chatBotRouter from "./routes/chatBotRoutes.js";
 
@@ -21,18 +27,32 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-// MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.error("MongoDB connection error:", error));
 
-// Routes
-//app.use("/api/auth", authRoutes);
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((error) => console.error("❌ MongoDB connection error:", error));
+
+
+// Socket.IO connection handler
+io.on("connection", (socket) => {
+  console.log("✅ A user connected");
+
+  socket.on("disconnect", () => {
+    console.log("❌ A user disconnected");
+  });
+
 app.use("/api/player", playerRoutes);
 app.use("/api/chatbot", chatBotRouter);
 
 
-app.listen(PORT, () => {
-  console.log(`app listening on port ${PORT}`)
-})
+  // Emit a test event every 5 seconds (optional for testing purposes)
+  setInterval(() => {
+    socket.emit("serverMessage", "Hello from the server!");
+  }, 5000);
+});
+
+// Start server
+server.listen(PORT, () => {
+  console.log(`🚀 Server running at http://${HOST}:${PORT}`);
+});
