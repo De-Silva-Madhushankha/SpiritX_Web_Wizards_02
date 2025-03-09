@@ -1,27 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const BudgetManagement = () => {
-    const budgetData = {
-        total: 10000000,
-        spent: 9200000,
-        remaining: 800000,
-        allocation: {
-            batsmen: 5900000,
-            bowlers: 4300000,
-            allRounders: 3300000
+    const user = useSelector((state) => state.auth.user);
+    const [remainingBudget, setRemainingBudget] = useState();
+    const [spentBugdet, setSpentBudget] = useState();
+    const [players, setPlayers] = useState([]);
+    const [totalValueByCategory, setTotalValueByCategory] = useState({});
+    const totalBudget = 9000000;
+
+    const fetchRemainingBudget = async () => {
+        try {
+            const response = await axios.get(`/user/remainingbudget/${user._id}`);
+            setRemainingBudget(response.data.remainingBudget);
+            setSpentBudget(totalBudget - response.data.remainingBudget);
+        } catch (error) {
+            console.error('Failed to fetch team data:', error);
         }
     };
 
-    // Function to format currency
-    const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(amount);
+    const fetchTeamData = async () => {
+        try {
+            const response = await axios.get(`/team/currentTeam/${user._id}`);
+            setPlayers(response.data.teamMembers);
+            const totalValueByCategory = response.data.teamMembers.reduce((acc, player) => {
+                acc[player.category] = acc[player.category] ? acc[player.category] + player.playerValue : player.playerValue;
+                return acc;
+            }, {});
+            setTotalValueByCategory(totalValueByCategory);
+        } catch (error) {
+            console.error('Failed to fetch team data:', error);
+        }
     };
+
+    useEffect(() => {
+        if (!user) return;
+        fetchRemainingBudget();
+        fetchTeamData();
+    }, [user]);
 
     // Calculate percentages for progress bars
     const calculatePercentage = (value, total) => {
@@ -33,9 +51,9 @@ const BudgetManagement = () => {
         // Different colors for different categories
         const getBarColor = () => {
             switch (category) {
-                case 'batsmen': return 'bg-sky-300';
-                case 'bowlers': return 'bg-sky-400';
-                case 'allRounders': return 'bg-sky-500';
+                case 'Batsman': return 'bg-sky-300';
+                case 'Bowler': return 'bg-sky-400';
+                case 'All-Rounder': return 'bg-sky-500';
                 default: return 'bg-sky-500';
             }
         };
@@ -68,58 +86,38 @@ const BudgetManagement = () => {
                             <div className="mb-8 space-y-4">
                                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-700 font-bold">Total Budget</span>
-                                    <span className="font-semibold text-gray-800">{formatCurrency(budgetData.total)}</span>
+                                    <span className="font-semibold text-gray-800">LKR {totalBudget}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-700 font-bold">Spent</span>
-                                    <span className="font-semibold text-gray-800">{formatCurrency(budgetData.spent)}</span>
+                                    <span className="font-semibold text-gray-800">LKR {spentBugdet}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2">
                                     <span className="text-gray-700 font-bold">Remaining</span>
-                                    <span className="font-semibold text-green-600">{formatCurrency(budgetData.remaining)}</span>
+                                    <span className="font-semibold text-green-600">LKR {remainingBudget}</span>
                                 </div>
                             </div>
 
                             {/* Budget Allocation Section */}
                             <div>
                                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Budget Allocation</h2>
-
                                 <div className="space-y-6">
-                                    {/* Batsmen */}
-                                    <div>
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className="text-gray-700">Batsmen</span>
-                                            <span className="font-semibold text-gray-800">{formatCurrency(budgetData.allocation.batsmen)}</span>
+                                    {Object.entries(totalValueByCategory).map(([category, totalValue]) => (
+                                        <div key={category}>
+                                            <div className="flex justify-between items-center mb-1">
+                                                <span className="text-gray-700">
+                                                    {category === 'Batsman' && 'Batsmen'}
+                                                    {category === 'Bowler' && 'Bowlers'}
+                                                    {category === 'All-Rounder' && 'All-Rounders'}
+                                                </span>
+                                                <span className="font-semibold text-gray-800">LKR {totalValue}</span>
+                                            </div>
+                                            <ProgressBar
+                                                percentage={calculatePercentage(totalValue, totalBudget)}
+                                                category={category}
+                                            />
                                         </div>
-                                        <ProgressBar
-                                            percentage={calculatePercentage(budgetData.allocation.batsmen, budgetData.total)}
-                                            category="batsmen"
-                                        />
-                                    </div>
-
-                                    {/* Bowlers */}
-                                    <div>
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className="text-gray-700">Bowlers</span>
-                                            <span className="font-semibold text-gray-800">{formatCurrency(budgetData.allocation.bowlers)}</span>
-                                        </div>
-                                        <ProgressBar
-                                            percentage={calculatePercentage(budgetData.allocation.bowlers, budgetData.total)}
-                                            category="bowlers"
-                                        />
-                                    </div>
-
-                                    {/* All-Rounders */}
-                                    <div>
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className="text-gray-700">All-Rounders</span>
-                                            <span className="font-semibold text-gray-800">{formatCurrency(budgetData.allocation.allRounders)}</span>
-                                        </div>
-                                        <ProgressBar
-                                            percentage={calculatePercentage(budgetData.allocation.allRounders, budgetData.total)}
-                                            category="allRounders"
-                                        />
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

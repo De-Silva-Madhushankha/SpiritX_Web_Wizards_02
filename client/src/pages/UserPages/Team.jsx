@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
-import { User, ChevronDown, ChevronUp, UserMinus } from 'lucide-react';
+import { User, ChevronDown, ChevronUp, UserMinus, ChartCandlestick } from 'lucide-react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const TeamPage = () => {
     const user = useSelector(state => state.auth.user);
     const [expandedPlayerId, setExpandedPlayerId] = useState(null);
     const [players, setPlayers] = useState([]);
+    const [teamPoints, setTeamPoints] = useState(null);
+    const [errorMessages, setErrorMessages] = useState('');
 
     useEffect(() => {
         if (!user) return;
@@ -16,12 +19,20 @@ const TeamPage = () => {
             try {
                 const response = await axios.get(`/team/currentTeam/${user._id}`);
                 setPlayers(response.data.teamMembers);
-                console.log(response.data);
             } catch (error) {
                 console.error('Failed to fetch team data:', error);
             }
         };
+        const fetchTeamPoints = async () => {
+            try {
+                const response = await axios.get(`/team/points/${user._id}`);
+                setTeamPoints(response.data.totalTeamPoints);
+            } catch (error) {
+                setErrorMessages(error.response.data.message);
+            }
+        };
 
+        fetchTeamPoints();
         fetchTeamData();
     }, [user]);
 
@@ -32,8 +43,15 @@ const TeamPage = () => {
         setExpandedPlayerId(expandedPlayerId === playerId ? null : playerId);
     };
 
-    const releasePlayer = (playerId) => {
-        setPlayers(players.filter(player => player.id !== playerId));
+    const releasePlayer = async (playerId) => {
+        if (!user) return;
+        try {
+            await axios.delete(`/team/remove/${user._id}/${playerId}`);
+            setPlayers(players.filter(player => player.playerId !== playerId));
+            toast.success('Player released successfully');
+        } catch (error) {
+            console.error(`Failed to release player ${playerId}:`, error);
+        }
     };
 
     return (
@@ -50,6 +68,13 @@ const TeamPage = () => {
                     <h1 className="text-3xl font-bold text-gray-100 mb-6">My Team</h1>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                         <div className="mt-4 md:mt-0 flex items-center">
+                            <div className="bg-blue-50 rounded-lg p-3 flex items-center mr-3">
+                                <ChartCandlestick className="h-5 w-5 text-blue-600 mr-2" />
+                                <div>
+                                    <p className="text-xs text-gray-500">Team Points</p>
+                                    <p className="font-bold text-blue-700">{teamPoints}</p>
+                                </div>
+                            </div>
                             <div className="bg-green-50 rounded-lg p-3 flex items-center">
                                 <User className="h-5 w-5 text-green-600 mr-2" />
                                 <div>
@@ -59,6 +84,11 @@ const TeamPage = () => {
                             </div>
                         </div>
                     </div>
+                    {errorMessages && (
+                        <div className="bg-red-50 rounded-lg p-3 mb-6">
+                            <p className="text-sm text-red-700">{errorMessages}</p>
+                        </div>
+                    )}
                     {categories.map((category) => (
                         <div key={category} className="mb-6 bg-white rounded-xl shadow-md p-4 md:p-6">
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">{category}</h2>
@@ -141,11 +171,8 @@ const TeamPage = () => {
 
                                                 <div className="md:col-span-3 mt-2 flex justify-end">
                                                     <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            releasePlayer(player.playerId);
-                                                        }}
-                                                        className="flex items-center bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                                                        onClick={() => releasePlayer(player.playerId)}
+                                                        className="flex items-center bg-red-50 hover:bg-red-100 hover:cursor-pointer text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                                                     >
                                                         <UserMinus size={16} className="mr-2" />
                                                         Release Player
