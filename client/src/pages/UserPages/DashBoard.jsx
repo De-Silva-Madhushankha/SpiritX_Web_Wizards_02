@@ -21,11 +21,9 @@ const DashBoard = () => {
           setTeamRank(rank);
         } else {
           console.error('Unexpected API response');
-          toast.error('Unexpected API response');
         }
       } catch (err) {
         console.error('Error fetching team rank:', err);
-        toast.error('Failed to fetch team rank');
       }
     };
 
@@ -35,7 +33,6 @@ const DashBoard = () => {
         setTotalPoints(response.data.totalPoints);
       } catch (err) {
         console.error('Error fetching total points:', err);
-        toast.error('Failed to fetch total points');
       }
     };
 
@@ -45,7 +42,6 @@ const DashBoard = () => {
         setTeamValue(response.data.teamValue);
       } catch (err) {
         console.error('Error fetching team value:', err);
-        toast.error('Failed to fetch team value');
       }
     };
 
@@ -55,7 +51,6 @@ const DashBoard = () => {
         setRemainingBudget(response.data.remainingBudget);
       } catch (err) {
         console.error('Error fetching remaining budget:', err);
-        toast.error('Failed to fetch remaining budget');
       }
     };
 
@@ -65,7 +60,6 @@ const DashBoard = () => {
         setRecentPerformance(response.data.recentPerformance);
       } catch (err) {
         console.error('Error fetching recent performance:', err);
-        toast.error('Failed to fetch recent performance');
       }
     };
 
@@ -119,7 +113,7 @@ const DashBoard = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h2 className="text-4xl font-bold text-gray-800">{totalPoints}</h2>
+                <h2 className="text-4xl font-bold text-gray-800">{totalPoints.toFixed(1)}</h2>
                 <p className="text-sm text-green-500 mt-1 flex items-center">
                   <span className="mr-1">
                     <MoveUp size={15} />
@@ -157,7 +151,7 @@ const DashBoard = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <h2 className="text-4xl font-bold text-gray-800">${remainingBudget}M</h2>
+                <h2 className="text-4xl font-bold text-gray-800">LKR {remainingBudget}</h2>
                 <p className="text-sm text-gray-500 mt-1">of $10M total</p>
               </div>
             </div>
@@ -182,8 +176,6 @@ const DashBoard = () => {
               ))}
             </div>
           </div>
-
-          {/* Footer */}
         </div>
       </div>
     </div>
