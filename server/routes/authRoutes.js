@@ -1,9 +1,13 @@
 import express from "express";
-import { signup } from "../controllers/authController.js"; // Import the controller function
-
+import { signup, signin, signout, getUsers, checkUsername, sendOTP, verifyOTP, resetPassword } from '../controllers/authController.js';
 const router = express.Router();
 
-// Use POST request for signup
-router.post("/signup", signup); // Changed to POST
+router.post("/signup", signup)
+router.post("/signin", signin)
+router.post("/signout", signout)
+router.get("/check-username",checkUsername);
+router.post("/auth/forgot-password/send-otp", sendOTP);
+router.post("/auth/forgot-password/verify-otp", verifyOTP);
+router.post("/auth/forgot-password/reset-password", resetPassword);
 
 export default router;
