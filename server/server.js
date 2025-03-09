@@ -56,7 +56,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => console.error("❌ MongoDB connection error:", error));
 
