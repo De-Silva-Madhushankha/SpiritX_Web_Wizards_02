@@ -20,8 +20,10 @@ export const generateTokenAndSetCookie = (userId, res) => {
 
 // Verify JWT token
 export const verifyToken = (token) => {
+  console.log("inside verifyToken");
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('decoded:', decoded);
     return decoded;
   } catch (err) {
     throw new Error('Invalid or expired token');
