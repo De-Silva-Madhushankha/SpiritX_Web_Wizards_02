@@ -1,69 +1,91 @@
 import Player from "../models/playerModel.js";
 import Team  from "../models/teamModel.js";
 import User from "../models/userModel.js";
+import mongoose from  "mongoose";
 
 import { calculatePlayerStats } from "../utils/playerCalculations.js";
 
-//User-E-4 
+//User-E-4  (postman checked)
 export const addPlayerToTeam = async (req, res) => {
-    try {
+  try {
+       
       const { userId, playerId } = req.body;
-  
-      let team = await Team.findOne({ userId });
-      console.log(team);
-      if (!team) {
-        team = new Team({ userId, players: [] });
-      }
-      console.log(team);
-  
-      // Check if player already exists in the team
-      if (team.players.includes(playerId)) {
-        return res.status(400).json({ message: "Player already in team" });
-      }
-  
-      // Check if the team already has 11 players
-      if (team.players.length >= 11) {
-        return res.status(400).json({ message: "Team already has 11 players" });
+
+      console.log("UserID:", userId);
+
+      // Validate userId and playerId before querying
+      if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(playerId)) {
+          return res.status(400).json({ message: "Invalid userId or playerId format" });
       }
 
-      // Find the player by ID in the database
-      const player = await Player.findById(playerId);
+      // Convert to ObjectId
+      const userObjectId = new mongoose.Types.ObjectId(userId);
+      const playerObjectId = new mongoose.Types.ObjectId(playerId);
+
+      // Find the user's team
+      let team = await Team.findOne({ userId: userObjectId });
+
+      if (!team) {
+          team = new Team({ userId: userObjectId, players: [] });
+      }
+
+      // Check if player already exists in the team
+      if (team.players.includes(playerObjectId)) {
+          return res.status(400).json({ message: "Player already in team" });
+      }
+
+      // Check if the team already has 11 players
+      if (team.players.length >= 11) {
+          return res.status(400).json({ message: "Team already has 11 players" });
+      }
+
+      // Find the player
+      const player = await Player.findById(playerObjectId);
       if (!player) {
-        return res.status(404).json({ message: "Player not found" });
+          return res.status(404).json({ message: "Player not found" });
       }
 
       // Calculate the player's stats (including value)
       const playerStats = calculatePlayerStats(player);
-      const playerValue = playerStats.playerValue; // Get the calculated player value
-      
+      const playerValue = playerStats.playerValue;
 
-      const user = await User.findById(userId); // Assuming you have a User model
-
+      // Find the user
+      const user = await User.findById(userObjectId);
       if (!user) {
-        return res.status(404).json({ message: "User not found" });
+          return res.status(404).json({ message: "User not found" });
       }
 
-      if (user.budget < playerValue ) {
-        return res.status(400).json({ message: "Not enough budget to add this player" });
+      if (user.budget < playerValue) {
+          return res.status(400).json({ message: "Not enough budget to add this player" });
       }
-      user.budget -= playerValue;
 
-      player.teamId = team._id; // Assign player to team
-      await player.save(); // Save player update
+      // Deduct player value from user's budget
+      user.budget -=playerValue;
+      await user.save();
 
-      team.players.push(playerId);
+      // Assign player to team
+      player.teamId = team._id;
+      await player.save();
+
+      // Add player to team
+      team.players.push(playerObjectId);
       await team.save();
-  
+
       res.status(200).json({ message: "Player added to team", team });
-    } catch (error) {
-      res.status(500).json({ message: "Server error" });
-    }
-  };
+
+  } catch (error) {
+      console.error("Error adding player to team:", error);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
   
-//User-E-5
+
+//User-E-5(postman checked)
 export const removePlayerFromTeam = async (req, res) => {
   try {
-    const { userId, playerId } = req.body;
+    const { userId, playerId } = req.params;
+    
 
     // Find the user's team
     const team = await Team.findOne({ userId });
@@ -80,19 +102,28 @@ export const removePlayerFromTeam = async (req, res) => {
     // Calculate the player's value using the existing stats calculation
     const playerStats = calculatePlayerStats(player);
     const playerValue = playerStats.playerValue; // Get the calculated player value
-
+      
     const user = await User.findById(userId); // Assuming you have a User model
-
-      if (!user) {
+    
+    if (!user) {
         return res.status(404).json({ message: "User not found" });
     }
+    
 
     // Remove the player from the team's players array
     team.players = team.players.filter((id) => id.toString() !== playerId);
     user.budget += playerValue; // Refund the player’s value to the team’s budget
 
+    console.log(playerValue);
+
+    console.log(team.players);
+    console.log(user.budget);
+
     // Update the player's teamId to null (indicating no team)
-    player.teamId = "No Team";
+    player.teamId =null;
+
+    await user.save();
+
     await player.save(); // Save the updated player
 
     // Save the updated team
@@ -108,10 +139,14 @@ export const removePlayerFromTeam = async (req, res) => {
 
 
   
-//User-E-5 //calculate team points only 11 players are selected
+//User-E-5 //calculate team points only 11 players are selected(postman checked)
   export const calculateTeamPoints = async (req, res) => {
     try {
         const { userId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+          return res.status(400).json({ message: "Invalid userId format" });
+        }
         const team = await Team.findOne({ userId }).populate("players");
 
         if (!team || team.players.length !== 11) {
@@ -130,7 +165,7 @@ export const removePlayerFromTeam = async (req, res) => {
     }
 };
   
-//User-E-1 //User-E-5
+//User-E-1 //User-E-5  (postman checked)
   export const getUserTeam = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -146,7 +181,7 @@ export const removePlayerFromTeam = async (req, res) => {
     }
 };
 
-//User-E-5
+//User-E-5(postman checked)
 export const getTeam = async (req, res) => {
     try {
       const { userId } = req.params;
@@ -178,7 +213,7 @@ export const getTeam = async (req, res) => {
     }
   };
   
-  // User-M-2,3
+  // User-M-2,3 (postman checked)
   // Controller to get the current user's team and player details // get the team with their price & number of team players
   export const getCurrentTeam = async (req, res) => {
     try {
