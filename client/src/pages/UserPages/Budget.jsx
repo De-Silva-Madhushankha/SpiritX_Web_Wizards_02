@@ -53,23 +53,29 @@ const BudgetManagement = () => {
     return (
         <div>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-                <div className="max-w-7xl mx-auto">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Budget Management</h1>
+            <div className="min-h-screen p-4 md:p-8"
+                style={{
+                    backgroundImage: "url('/assets/bg.webp')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                }}
+            >
+                <div className="max-w-7xl mx-auto bg-white/10 p-8 rounded-3xl backdrop-filter backdrop-blur-md border border-white/20 shadow-2xl w-full text-white">
+                    <h1 className="text-3xl font-bold text-gray-100 mb-6">Budget Management</h1>
                     <div className="bg-white rounded-xl shadow-md overflow-hidden">
                         <div className="p-6">
                             {/* Budget Overview */}
                             <div className="mb-8 space-y-4">
                                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                    <span className="text-gray-700">Total Budget</span>
+                                    <span className="text-gray-700 font-bold">Total Budget</span>
                                     <span className="font-semibold text-gray-800">{formatCurrency(budgetData.total)}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                    <span className="text-gray-700">Spent</span>
+                                    <span className="text-gray-700 font-bold">Spent</span>
                                     <span className="font-semibold text-gray-800">{formatCurrency(budgetData.spent)}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2">
-                                    <span className="text-gray-700">Remaining</span>
+                                    <span className="text-gray-700 font-bold">Remaining</span>
                                     <span className="font-semibold text-green-600">{formatCurrency(budgetData.remaining)}</span>
                                 </div>
                             </div>

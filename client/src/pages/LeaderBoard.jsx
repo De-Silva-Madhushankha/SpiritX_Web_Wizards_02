@@ -14,9 +14,9 @@ const Leaderboard = () => {
 
     // Function to determine background and text colors based on rank
     const getRankStyles = (rank) => {
-        if (rank === 1) return "bg-orange-500 text-white";
-        if (rank === 2) return "bg-amber-400 text-white";
-        if (rank === 3) return "bg-amber-200 text-white";
+        if (rank === 1) return "bg-blue-500 text-white";
+        if (rank === 2) return "bg-sky-400 text-white";
+        if (rank === 3) return "bg-sky-200 text-white";
         if (rank === 42) return "bg-gray-200 text-gray-800";
         return "bg-gray-200 text-black";
     };
@@ -24,9 +24,15 @@ const Leaderboard = () => {
     return (
         <div>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-                <div className="max-w-7xl mx-auto">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Leaderboard</h1>
+            <div className="min-h-screen p-4 md:p-8"
+                style={{
+                    backgroundImage: "url('/assets/bg.webp')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                }}
+            >
+                <div className="max-w-7xl mx-auto bg-white/10 p-8 rounded-3xl backdrop-filter backdrop-blur-md border border-white/20 shadow-2xl w-full text-white">
+                    <h1 className="text-3xl font-bold text-gray-100 mb-6">Leaderboard</h1>
                     <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
                         <div className="overflow-hidden">
                             {leaderboardData.map((team, index) => (

@@ -19,31 +19,43 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || "localhost";
 
-// Create HTTP server
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Middleware
+app.use(express.json());
+app.use(cors(corsOptions));
+app.use(cookieParser());
+
+// Create HTTP server to work with Socket.IO
 const server = http.createServer(app);
 
 // Initialize Socket.IO with CORS options
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
-    credentials: true,
+    origin: "*",
+    methods: ["GET", "POST"],
   },
 });
 
-// Middleware
-app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true,
-}));
-app.use(cookieParser());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URL)
+// API Routes
+app.use("/api/player", playerRoutes);
+app.use("/api/overallstat", statRoutes);
+app.use("/api/team", teamRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/chatbot", chatBotRouter);
+
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => console.error("❌ MongoDB connection error:", error));
 
-// Socket.IO connection handler
 io.on("connection", (socket) => {
   console.log("✅ A user connected");
 
@@ -57,9 +69,10 @@ io.on("connection", (socket) => {
   }, 5000);
 });
 
-// API Routes
-app.use("/api/player", playerRoutes);
-app.use("/api/chatbot", chatBotRouter);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the IPL Fantasy API");
+});
 
 // Start server
 server.listen(PORT, () => {
