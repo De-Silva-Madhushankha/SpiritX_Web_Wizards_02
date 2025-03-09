@@ -8,10 +8,9 @@ import ScrollToTop from './components/ScrollToTop';
 import PrivateRoute from './components/PrivateRoute';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import UserDashBoard from './pages/UserPages/DashBoard';
-import AdminDashBoard from './pages/AdminPages/DashBoard';
-import Spiriter from './pages/Spiriter/Spiriter';
+import Spiriter from './components/Spiriter';
 import TeamPage from './pages/UserPages/Team';
-import Leaderboard from './pages/LeaderBoard';
+import Leaderboard from './pages/UserPages/LeaderBoard';
 import BudgetManagement from './pages/UserPages/Budget';
 import SearchPlayers from './pages/UserPages/Players';
 
@@ -30,19 +29,17 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/*" element={<NotFound />} />
 
-        <Route path="/user/dashboard" element={<UserDashBoard />} />
-        <Route path="/spiriter" element={<Spiriter />} />
-        <Route path="/user/team" element={<TeamPage />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/user/budget-management" element={<BudgetManagement />} />
-        <Route path="/user/search-players" element={<SearchPlayers />} />
-
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
-          <Route path="/admin/dashboard" element={<AdminDashBoard />} />
+          <Route path="/user/dashboard" element={<UserDashBoard />} />
+          <Route path="/user/team" element={<TeamPage />} />
+          <Route path="/user/leaderboard" element={<Leaderboard />} />
+          <Route path="/user/budget-management" element={<BudgetManagement />} />
+          <Route path="/user/search-players" element={<SearchPlayers />} />
         </Route>
-        
+
       </Routes>
+      <Spiriter />
 
       <ToastContainer
         position="top-right"

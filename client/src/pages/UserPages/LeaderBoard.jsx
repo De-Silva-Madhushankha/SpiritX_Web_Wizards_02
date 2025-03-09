@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
 
 const Leaderboard = () => {
     const leaderboardData = [
@@ -17,7 +17,7 @@ const Leaderboard = () => {
         if (rank === 1) return "bg-blue-500 text-white";
         if (rank === 2) return "bg-sky-400 text-white";
         if (rank === 3) return "bg-sky-200 text-white";
-        if (rank === 42) return "bg-gray-200 text-gray-800";
+        if (rank === 42) return "bg-amber-200 text-gray-800";
         return "bg-gray-200 text-black";
     };
 

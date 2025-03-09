@@ -5,12 +5,12 @@ import { User, ChevronDown, ChevronUp, UserMinus } from 'lucide-react';
 const TeamPage = () => {
     const [expandedPlayerId, setExpandedPlayerId] = useState(null);
     const [players, setPlayers] = useState([
-        { 
-            id: 1, 
-            name: 'Rahul Sharma', 
-            university: 'University A', 
-            points: 320, 
-            value: '$1.8M', 
+        {
+            id: 1,
+            name: 'Rahul Sharma',
+            university: 'University A',
+            points: 320,
+            value: '$1.8M',
             category: 'Batsmen',
             stats: {
                 totalRuns: 420,
@@ -21,12 +21,12 @@ const TeamPage = () => {
                 runsConceded: 0
             }
         },
-        { 
-            id: 2, 
-            name: 'Virat Singh', 
-            university: 'University B', 
-            points: 280, 
-            value: '$1.5M', 
+        {
+            id: 2,
+            name: 'Virat Singh',
+            university: 'University B',
+            points: 280,
+            value: '$1.5M',
             category: 'Batsmen',
             stats: {
                 totalRuns: 380,
@@ -37,12 +37,12 @@ const TeamPage = () => {
                 runsConceded: 0
             }
         },
-        { 
-            id: 3, 
-            name: 'Rohit Kumar', 
-            university: 'University C', 
-            points: 260, 
-            value: '$1.4M', 
+        {
+            id: 3,
+            name: 'Rohit Kumar',
+            university: 'University C',
+            points: 260,
+            value: '$1.4M',
             category: 'Batsmen',
             stats: {
                 totalRuns: 340,
@@ -53,12 +53,12 @@ const TeamPage = () => {
                 runsConceded: 0
             }
         },
-        { 
-            id: 4, 
-            name: 'Ajay Patel', 
-            university: 'University D', 
-            points: 240, 
-            value: '$1.2M', 
+        {
+            id: 4,
+            name: 'Ajay Patel',
+            university: 'University D',
+            points: 240,
+            value: '$1.2M',
             category: 'Batsmen',
             stats: {
                 totalRuns: 320,
@@ -71,12 +71,12 @@ const TeamPage = () => {
         },
 
         // Bowlers
-        { 
-            id: 5, 
-            name: 'Amit Yadav', 
-            university: 'University E', 
-            points: 290, 
-            value: '$1.6M', 
+        {
+            id: 5,
+            name: 'Amit Yadav',
+            university: 'University E',
+            points: 290,
+            value: '$1.6M',
             category: 'Bowlers',
             stats: {
                 totalRuns: 80,
@@ -87,12 +87,12 @@ const TeamPage = () => {
                 runsConceded: 420
             }
         },
-        { 
-            id: 6, 
-            name: 'Suresh Raina', 
-            university: 'University F', 
-            points: 270, 
-            value: '$1.4M', 
+        {
+            id: 6,
+            name: 'Suresh Raina',
+            university: 'University F',
+            points: 270,
+            value: '$1.4M',
             category: 'Bowlers',
             stats: {
                 totalRuns: 60,
@@ -103,12 +103,12 @@ const TeamPage = () => {
                 runsConceded: 380
             }
         },
-        { 
-            id: 7, 
-            name: 'Deepak Chahar', 
-            university: 'University G', 
-            points: 250, 
-            value: '$1.3M', 
+        {
+            id: 7,
+            name: 'Deepak Chahar',
+            university: 'University G',
+            points: 250,
+            value: '$1.3M',
             category: 'Bowlers',
             stats: {
                 totalRuns: 50,
@@ -121,12 +121,12 @@ const TeamPage = () => {
         },
 
         // All-Rounders
-        { 
-            id: 8, 
-            name: 'Hardik Pandya', 
-            university: 'University H', 
-            points: 310, 
-            value: '$1.7M', 
+        {
+            id: 8,
+            name: 'Hardik Pandya',
+            university: 'University H',
+            points: 310,
+            value: '$1.7M',
             category: 'All-Rounders',
             stats: {
                 totalRuns: 320,
@@ -137,12 +137,12 @@ const TeamPage = () => {
                 runsConceded: 350
             }
         },
-        { 
-            id: 9, 
-            name: 'Ravindra Jadeja', 
-            university: 'University I', 
-            points: 300, 
-            value: '$1.6M', 
+        {
+            id: 9,
+            name: 'Ravindra Jadeja',
+            university: 'University I',
+            points: 300,
+            value: '$1.6M',
             category: 'All-Rounders',
             stats: {
                 totalRuns: 300,
@@ -153,12 +153,12 @@ const TeamPage = () => {
                 runsConceded: 330
             }
         },
-        { 
-            id: 10, 
-            name: 'Bhanuka Rajapaksa', 
-            university: 'University of Moratuwa', 
-            points: 280, 
-            value: '$1.5M', 
+        {
+            id: 10,
+            name: 'Bhanuka Rajapaksa',
+            university: 'University of Moratuwa',
+            points: 280,
+            value: '$1.5M',
             category: 'All-Rounders',
             stats: {
                 totalRuns: 364,
@@ -169,12 +169,12 @@ const TeamPage = () => {
                 runsConceded: 336
             }
         },
-        { 
-            id: 11, 
-            name: 'Shivam Dube', 
-            university: 'University K', 
-            points: 260, 
-            value: '$1.4M', 
+        {
+            id: 11,
+            name: 'Shivam Dube',
+            university: 'University K',
+            points: 260,
+            value: '$1.4M',
             category: 'All-Rounders',
             stats: {
                 totalRuns: 260,
@@ -210,6 +210,17 @@ const TeamPage = () => {
             >
                 <div className="max-w-7xl mx-auto bg-white/10 p-6 md:p-8 rounded-3xl backdrop-filter backdrop-blur-md border border-white/20 shadow-2xl w-full text-white">
                     <h1 className="text-3xl font-bold text-gray-100 mb-6">My Team</h1>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <div className="mt-4 md:mt-0 flex items-center">
+                            <div className="bg-green-50 rounded-lg p-3 flex items-center">
+                                <User className="h-5 w-5 text-green-600 mr-2" />
+                                <div>
+                                    <p className="text-xs text-gray-500">Team</p>
+                                    <p className="font-bold text-green-700">3/11</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {categories.map((category) => (
                         <div key={category} className="mb-6 bg-white rounded-xl shadow-md p-4 md:p-6">
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">{category}</h2>
@@ -244,7 +255,7 @@ const TeamPage = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        
+
                                         {expandedPlayerId === player.id && (
                                             <div className="bg-gray-50 rounded-b-lg border-x border-b border-gray-100 p-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                                                 <div className="space-y-2">
@@ -293,7 +304,7 @@ const TeamPage = () => {
                                                 </div>
 
                                                 <div className="md:col-span-3 mt-2 flex justify-end">
-                                                    <button 
+                                                    <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             releasePlayer(player.id);

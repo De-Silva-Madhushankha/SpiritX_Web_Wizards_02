@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Bell, Trophy, User, Settings, LogOut } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { logoutUser } from '../features/auth/authActions';
 
 const Navbar = () => {
-    const userType = useSelector((state) => state.auth.userType) || 'user';
+    const dispatch = useDispatch();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+            await dispatch(logoutUser());
+            window.location.href = '/login';
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     return (
@@ -23,33 +35,19 @@ const Navbar = () => {
                     </div>
 
                     {/* Desktop Navigation Links */}
-                    {userType === 'admin' && (
-                        <div className="hidden md:flex items-center space-x-2">
-                            <a href="/admin/dashboard" className="px-3 py-2 rounded-md transition hover:text-blue-400 hover:bg-white/20">
-                                Dashboard
+                    <div className="hidden md:flex items-center space-x-2">
+                        {[
+                            { href: "/user/dashboard", text: "Dashboard" },
+                            { href: "/user/team", text: "My Team" },
+                            { href: "/user/search-players", text: "Players" },
+                            { href: "/user/budget-management", text: "Budget" },
+                            { href: "/user/leaderboard", text: "Leaderboard" }
+                        ].map(({ href, text }) => (
+                            <a key={href} href={href} className="px-3 py-2 rounded-md transition hover:text-blue-400 hover:bg-white/20">
+                                {text}
                             </a>
-                            <a href="/admin/players" className="px-3 py-2 rounded-md transition hover:text-blue-400 hover:bg-white/20">
-                                Players
-                            </a>
-                        </div>
-                    )}
-
-                    {userType === 'user' && (
-                        <div className="hidden md:flex items-center space-x-2">
-                            {[
-                                { href: "/user/dashboard", text: "Dashboard" },
-                                { href: "/user/team", text: "My Team" },
-                                { href: "/user/search-players", text: "Players" },
-                                { href: "/user/budget-management", text: "Budget" },
-                                { href: "/leaderboard", text: "Leaderboard" }
-                            ].map(({ href, text }) => (
-                                <a key={href} href={href} className="px-3 py-2 rounded-md transition hover:text-blue-400 hover:bg-white/20">
-                                    {text}
-                                </a>
-                            ))}
-                        </div>
-                    )}
-
+                        ))}
+                    </div>
                     {/* Right Side Icons */}
                     <div className="flex items-center space-x-3">
                         {/* Notification Bell */}
@@ -81,10 +79,13 @@ const Navbar = () => {
                                         Settings
                                     </a>
                                     <div className="border-t border-gray-100"></div>
-                                    <a href="/logout" className="flex items-center px-4 py-2 text-sm transition hover:text-red-500 hover:bg-gray-100">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center px-4 py-2 text-sm transition hover:text-red-500 hover:bg-gray-100 hover:cursor-pointer w-full text-left"
+                                    >
                                         <LogOut className="mr-2 h-4 w-4 text-indigo-600" />
                                         Log out
-                                    </a>
+                                    </button>
                                 </div>
                             )}
                         </div>
