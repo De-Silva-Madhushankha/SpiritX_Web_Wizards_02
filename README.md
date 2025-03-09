@@ -154,6 +154,24 @@ To access the admin dashboard, follow these steps:
 2. Navigate to the admin dashboard .
 3. Enter the login credentials provided below.
 
+
+### Admin Setup
+
+1. Navigate to the `admin` directory:
+    ```sh
+    cd admin
+    ```
+
+2. Install dependencies:
+    ```sh
+    npm install
+    ```
+
+3. Start the server:🌐.
+    ```sh
+    npm run start
+    ```
+    
 ## Login Credentials 🔐
 
 - **Email** 📧: `spirit@uom.lk`
