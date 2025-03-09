@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../features/auth/authActions';
-import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../../features/auth/authActions';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -29,21 +30,16 @@ const SignUp = () => {
       [id]: value,
     });
 
-    // Username validation
-    // For username, use debouncing to avoid too many API calls
     if (id === 'username') {
-      // Clear any existing timeout
       if (usernameCheckTimeoutRef.current) {
         clearTimeout(usernameCheckTimeoutRef.current);
       }
 
-      // Set basic validation immediately
       let tempErrors = { ...errors };
       if (value.length < 8) {
         tempErrors.username = 'Username must be at least 8 characters long';
         setErrors(tempErrors);
       } else {
-        // Check availability after typing stops for 500ms
         usernameCheckTimeoutRef.current = setTimeout(async () => {
           if (value.length >= 8) {
             try {
@@ -62,7 +58,7 @@ const SignUp = () => {
               console.error('Error checking username:', error);
             }
           }
-        }, 500); // 500ms delay
+        }, 500);
       }
     } else {
       // Validate other fields in real-time
@@ -114,11 +110,10 @@ const SignUp = () => {
 
   const checkUsernameAvailability = async (username) => {
     try {
-      const response = await axios.get(`/api/users/check-username?username=${username}`);
-      return response.data.available; //API returns { available: true/false }
+      const response = await axios.get(`/auth/check-username?username=${username}`);
+      return response.data.available; 
     } catch (error) {
-      toast.error('Error checking username availability');
-      return false; // Assume username is taken if there's an error
+      return false;
     }
   };
 
@@ -130,7 +125,7 @@ const SignUp = () => {
       return;
     }
 
-    if (password.length > 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    if (password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       strength = 'strong';
     } else if (password.length >= 6) {
       strength = 'medium';
@@ -153,7 +148,6 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all fields before submission
     const tempErrors = {};
     if (!userData.username || userData.username.length < 8) {
       tempErrors.username = 'Username must be at least 8 characters long';
@@ -178,14 +172,14 @@ const SignUp = () => {
       setIsSubmitting(true);
       try {
         const result = await dispatch(registerUser(userData));
-
-        if (result.success) {
+        
+        if (result.payload.success) {
           setTimeout(() => {
             navigate('/login');
-            toast.success('Account created successfully! Redirecting to login page...');
+            toast.success('Account created successfully!');
           }, 2000);
         } else {
-          toast.error(result.error); // Show specific error message
+          toast.error(result.payload); // Show specific error message
         }
       } catch (err) {
         toast.error('An unexpected error occurred. Please try again.');
@@ -219,7 +213,6 @@ const SignUp = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mt-8 space-y-6">
-            {/* Username Field */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-100 mb-1">Username</label>
               <input
@@ -233,7 +226,6 @@ const SignUp = () => {
               {errors.username && <p className="mt-1 text-sm text-red-500">{errors.username}</p>}
             </div>
 
-            {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-100 mb-1">Email</label>
               <input
@@ -247,7 +239,6 @@ const SignUp = () => {
               {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
             </div>
 
-            {/* Password Field */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-100 mb-1">Password</label>
               <div className="relative">
@@ -269,7 +260,6 @@ const SignUp = () => {
               </div>
               {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
 
-              {/* Password Strength Indicator */}
               {userData.password && (
                 <div className="mt-2">
                   <div className="flex items-center">
@@ -286,7 +276,6 @@ const SignUp = () => {
                 </div>
               )}
 
-              {/* Password Requirements */}
               <div className="mt-2 grid grid-cols-2 gap-1">
                 <p className={`text-xs ${/[a-z]/.test(userData.password) ? 'text-green-600' : 'text-gray-300'}`}>• Add Lowercase letters</p>
                 <p className={`text-xs ${/[A-Z]/.test(userData.password) ? 'text-green-600' : 'text-gray-300'}`}>• Add Uppercase letters</p>
@@ -295,7 +284,6 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Confirm Password Field */}
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-100 mb-1">Confirm Password</label>
               <div className="relative">
@@ -318,7 +306,6 @@ const SignUp = () => {
               {errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>}
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting || Object.keys(errors).length > 0}
@@ -332,13 +319,12 @@ const SignUp = () => {
           </div>
         </form>
 
-        {/* Sign In Link */}
         <div className="mt-6 text-center">
           <p className="text-gray-100">
             Already have an account?{' '}
-            <a href="/login" className="text-orange-400 hover:text-orange-500 font-medium">
+            <Link to="/login" className="text-orange-400 hover:text-orange-500 font-medium">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       </div>

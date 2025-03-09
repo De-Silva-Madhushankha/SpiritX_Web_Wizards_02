@@ -1,11 +1,20 @@
 import mongoose from "mongoose";
 
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
     unique: true,
+  },
+  role: {
+    type: String,
+    default: "user", // "user" or "admin"
+    Enum : ["user","admin"]
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
   },
   password: {
     type: String,
@@ -17,11 +26,15 @@ const userSchema = new mongoose.Schema({
   },
   budget: {
     type: Number,
-    default: 9000000, // Rs. 9,000,000 initial budget
+    default: 9000000, // LKR 9,000,000 initial budget
   },
   points: {
     type: Number,
     default: 0, // Points will be calculated when the team is complete
+  },
+  team: {
+    type: Array,
+    default: [], // Array of player IDs
   },
 });
 
