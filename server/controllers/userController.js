@@ -12,7 +12,7 @@ export const getAvailablePlayers = async (req, res) => {
 };
 
 
-//User-M-2
+//User-M-2  (postman checked)
 export const getUserRemainingBudget = async (req, res) => {
     try {
       const { userId } = req.params; // Get the userId from the request parameters
@@ -24,9 +24,10 @@ export const getUserRemainingBudget = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-  
+  console.log(user.budget);
+
       // Calculate the remaining budget (initial budget - current budget)
-      const remainingBudget = 9000000 - user.budget;
+      const remainingBudget = user.budget;
   
       // Return the remaining budget
       res.status(200).json({ remainingBudget });

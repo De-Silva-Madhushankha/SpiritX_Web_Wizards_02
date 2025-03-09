@@ -4,6 +4,6 @@ import { getTournamentStats } from "../controllers/tournamentController.js"; // 
 const router = express.Router();
 
 // Route to get tournament stats
-router.get("/", getTournamentStats);
+router.get("/", getTournamentStats);//done
 
 export default router;

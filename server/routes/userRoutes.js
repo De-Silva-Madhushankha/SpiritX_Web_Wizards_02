@@ -4,8 +4,10 @@ import {getAvailablePlayers ,getUserRemainingBudget,getLeaderboard} from "../con
 const router = express.Router();
 
 // Route to get tournament stats
-router.get("/", getAvailablePlayers);
-router.get("/remainingbudget/:userId", getUserRemainingBudget);
+router.get("/", getAvailablePlayers);//done
+router.get("/remainingbudget/:userId", getUserRemainingBudget);//done
 router.get("/leaderboard/:userId", getLeaderboard);
 
 export default router;
+
+
