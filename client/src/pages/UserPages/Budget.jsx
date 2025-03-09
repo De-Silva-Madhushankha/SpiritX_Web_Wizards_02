@@ -5,8 +5,8 @@ import axios from 'axios';
 
 const BudgetManagement = () => {
     const user = useSelector((state) => state.auth.user);
-    const [remainingBudget, setRemainingBudget] = useState();
-    const [spentBugdet, setSpentBudget] = useState();
+    const [remainingBudget, setRemainingBudget] = useState(0);
+    const [spentBugdet, setSpentBudget] = useState(0);
     const [players, setPlayers] = useState([]);
     const [totalValueByCategory, setTotalValueByCategory] = useState({});
     const totalBudget = 9000000;

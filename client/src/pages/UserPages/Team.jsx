@@ -72,7 +72,7 @@ const TeamPage = () => {
                                 <ChartCandlestick className="h-5 w-5 text-blue-600 mr-2" />
                                 <div>
                                     <p className="text-xs text-gray-500">Team Points</p>
-                                    <p className="font-bold text-blue-700">{teamPoints}</p>
+                                    <p className="font-bold text-blue-700">{teamPoints?.toFixed(1)}</p>
                                 </div>
                             </div>
                             <div className="bg-green-50 rounded-lg p-3 flex items-center">
