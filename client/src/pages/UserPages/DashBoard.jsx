@@ -5,10 +5,16 @@ import { Trophy, MoveUp, MoveDown, Signal, CirclePlus, Wallet } from 'lucide-rea
 const DashBoard = () => {
   return (
     <div>
-      <Navbar />
-      <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+      <Navbar/>
+      <div className="min-h-screen p-4 md:p-8"
+        style={{
+          backgroundImage: "url('/assets/bg.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      >
+        <div className="max-w-7xl mx-auto bg-white/10 p-8 rounded-3xl backdrop-filter backdrop-blur-md border border-white/20 shadow-2xl w-full text-white">
+          <h1 className="text-3xl font-bold text-gray-100 mb-6">Dashboard</h1>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -17,7 +23,7 @@ const DashBoard = () => {
               <div className="flex justify-between items-start">
                 <span className="text-sm font-medium text-gray-500">Team Rank</span>
                 <span className="text-gray-400">
-                  <Trophy/>
+                  <Trophy />
                 </span>
               </div>
               <div className="mt-4">
@@ -97,7 +103,7 @@ const DashBoard = () => {
                     <h3 className="font-semibold text-gray-800">Match 12: University A vs University B</h3>
                     <p className="text-sm text-gray-500 mt-1">Mar 5, 2025</p>
                   </div>
-                  <div className="text-xl font-bold text-blue-600">120 pts</div>
+                  <div className="text-xl font-bold text-sky-600">120 pts</div>
                 </div>
               </div>
 
@@ -108,7 +114,7 @@ const DashBoard = () => {
                     <h3 className="font-semibold text-gray-800">Match 11: University C vs University D</h3>
                     <p className="text-sm text-gray-500 mt-1">Mar 2, 2025</p>
                   </div>
-                  <div className="text-xl font-bold text-blue-600">85 pts</div>
+                  <div className="text-xl font-bold text-sky-600">85 pts</div>
                 </div>
               </div>
 
@@ -119,7 +125,7 @@ const DashBoard = () => {
                     <h3 className="font-semibold text-gray-800">Match 10: University E vs University F</h3>
                     <p className="text-sm text-gray-500 mt-1">Feb 28, 2025</p>
                   </div>
-                  <div className="text-xl font-bold text-blue-600">145 pts</div>
+                  <div className="text-xl font-bold text-sky-600">145 pts</div>
                 </div>
               </div>
             </div>

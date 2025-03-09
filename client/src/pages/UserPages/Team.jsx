@@ -28,9 +28,15 @@ const TeamPage = () => {
     return (
         <div>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-                <div className="max-w-7xl mx-auto">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">My Team</h1>
+            <div className="min-h-screen p-4 md:p-8"
+                style={{
+                    backgroundImage: "url('/assets/bg.webp')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                }}
+            >
+                <div className="max-w-7xl mx-auto bg-white/10 p-8 rounded-3xl backdrop-filter backdrop-blur-md border border-white/20 shadow-2xl w-full text-white">
+                    <h1 className="text-3xl font-bold text-gray-100 mb-6">My Team</h1>
                     {categories.map((category) => (
                         <div key={category} className="mb-6 bg-white rounded-xl shadow-md p-6">
                             <h2 className="text-lg font-semibold text-gray-800 mb-4">{category}</h2>
@@ -41,7 +47,7 @@ const TeamPage = () => {
                                         key={player.id}
                                         className="border-b last:border-none border-gray-100 grid grid-cols-12 items-center hover:bg-gray-50 transition-colors rounded-lg p-2"
                                     >
-                                        <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 col-span-1">
+                                        <div className="w-8 h-8 bg-sky-200 rounded-full flex items-center justify-center text-indigo-600 col-span-1">
                                             <User size={16} strokeWidth={2} />
                                         </div>
                                         <div className="col-span-6 md:col-span-5">
