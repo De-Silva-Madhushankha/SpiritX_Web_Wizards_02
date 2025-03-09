@@ -7,51 +7,41 @@ import http from "http"; // Import http module to integrate Socket.IO with Expre
 import { Server } from "socket.io"; // Correct import for socket.io
 
 // Importing routes
-import playerRoutes from "./routes/playerRoutes.js";
 import statRoutes from "./routes/statRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import playerRoutes from "./routes/playerRoutes.js";
+import chatBotRouter from "./routes/chatBotRoutes.js";
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || "localhost";
 
-// Middleware
-app.use(express.json());
-app.use(cors());
-app.use(cookieParser());
-
-// Create HTTP server to work with Socket.IO
+// Create HTTP server
 const server = http.createServer(app);
 
-// Initialize Socket.IO server
+// Initialize Socket.IO with CORS options
 const io = new Server(server, {
   cors: {
-    origin: "*", // Set to your frontend URL in production
-    methods: ["GET", "POST"],
+    origin: "http://localhost:5173",
+    credentials: true,
   },
 });
 
-// Default route
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-// API Routes
-app.use("/api/player", playerRoutes);
-app.use("/api/overallstat", statRoutes);
-app.use("/api/team", teamRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/auth", authRoutes);
-
+// Middleware
+app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+app.use(cookieParser());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => console.error("❌ MongoDB connection error:", error));
-
 
 // Socket.IO connection handler
 io.on("connection", (socket) => {
@@ -66,6 +56,10 @@ io.on("connection", (socket) => {
     socket.emit("serverMessage", "Hello from the server!");
   }, 5000);
 });
+
+// API Routes
+app.use("/api/player", playerRoutes);
+app.use("/api/chatbot", chatBotRouter);
 
 // Start server
 server.listen(PORT, () => {

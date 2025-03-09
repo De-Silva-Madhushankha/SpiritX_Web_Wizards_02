@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import ForgotPassword from './pages/ForgotPassword';
 import UserDashBoard from './pages/UserPages/DashBoard';
 import AdminDashBoard from './pages/AdminPages/DashBoard';
+import Spiriter from './pages/Spiriter/Spiriter';
 import TeamPage from './pages/UserPages/Team';
 import Leaderboard from './pages/LeaderBoard';
 import BudgetManagement from './pages/UserPages/Budget';
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/*" element={<NotFound />} />
 
         <Route path="/user/dashboard" element={<UserDashBoard />} />
+        <Route path="/spiriter" element={<Spiriter />} />
         <Route path="/user/team" element={<TeamPage />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/user/budget-management" element={<BudgetManagement />} />
