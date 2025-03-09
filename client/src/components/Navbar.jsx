@@ -39,9 +39,7 @@ const Navbar = () => {
                             {[
                                 { href: "/user/dashboard", text: "Dashboard" },
                                 { href: "/user/team", text: "My Team" },
-                                { href: "/user/players", text: "Players" },
-                                { href: "/user/stats", text: "Statistics" },
-                                { href: "/user/schedule", text: "Schedule" },
+                                { href: "/user/search-players", text: "Players" },
                                 { href: "/user/budget-management", text: "Budget" },
                                 { href: "/leaderboard", text: "Leaderboard" }
                             ].map(({ href, text }) => (
