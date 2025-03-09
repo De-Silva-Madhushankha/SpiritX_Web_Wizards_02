@@ -29,8 +29,6 @@ SpiritX_Web_Wizards_02, also known as **Spirit11**, is a fantasy cricket league 
     pnpm run dev
     ```
 
-4. Open your browser and navigate to `http://localhost:3000`.
-
 ### Server Setup
 
 1. Navigate to the `server` directory:
