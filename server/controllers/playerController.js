@@ -27,6 +27,7 @@ export const getPlayer = async (req, res) => {
       }
 
       const playerData = player.toObject();
+      console.log(playerData);
   
       // Calculate the player's stats
       const playerStats = calculatePlayerStats(playerData);
