@@ -14,7 +14,7 @@ const DashBoard = () => {
   useEffect(() => {
     const fetchTeamRank = async () => {
       try {
-        const response = await axios.get('/team/teaminfo/teamRank/', { withCredentials: true });
+        const response = await axios.get('/team/teaminfo/teamRank', { withCredentials: true });
         console.log(response.data);
         const rank = response.data;
         if (typeof rank === 'number') {
@@ -31,7 +31,7 @@ const DashBoard = () => {
 
     const fetchTotalPoints = async () => {
       try {
-        const response = await axios.get('/team/teaminfo/points/', { withCredentials: true });
+        const response = await axios.get('/team/teaminfo/totalPoints', { withCredentials: true });
         setTotalPoints(response.data.totalPoints);
       } catch (err) {
         console.error('Error fetching total points:', err);
@@ -41,7 +41,7 @@ const DashBoard = () => {
 
     const fetchTeamValue = async () => {
       try {
-        const response = await axios.get('/team/teaminfo/value/', { withCredentials: true });
+        const response = await axios.get('/team/teaminfo/teamValue', { withCredentials: true });
         setTeamValue(response.data.teamValue);
       } catch (err) {
         console.error('Error fetching team value:', err);
@@ -51,7 +51,7 @@ const DashBoard = () => {
 
     const fetchRemainingBudget = async () => {
       try {
-        const response = await axios.get('/team/teaminfo/budget/', { withCredentials: true });
+        const response = await axios.get('/team/teaminfo/remainingBudget', { withCredentials: true });
         setRemainingBudget(response.data.remainingBudget);
       } catch (err) {
         console.error('Error fetching remaining budget:', err);
@@ -61,7 +61,7 @@ const DashBoard = () => {
 
     const fetchRecentPerformance = async () => {
       try {
-        const response = await axios.get('/team/teaminfo/recentPerformance/', { withCredentials: true });
+        const response = await axios.get('/team/teaminfo/recentPerformance', { withCredentials: true });
         setRecentPerformance(response.data.recentPerformance);
       } catch (err) {
         console.error('Error fetching recent performance:', err);
