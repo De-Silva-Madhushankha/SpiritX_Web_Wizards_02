@@ -91,7 +91,11 @@ const TeamPage = () => {
                     )}
                     {categories.map((category) => (
                         <div key={category} className="mb-6 bg-white rounded-xl shadow-md p-4 md:p-6">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-4">{category}</h2>
+                            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                                {category === 'Batsman' && 'Batsmen'}
+                                {category === 'Bowler' && 'Bowlers'}
+                                {category === 'All-Rounder' && 'All-Rounders'}
+                            </h2>
                             {players
                                 .filter(player => player.category === category)
                                 .map(player => (
