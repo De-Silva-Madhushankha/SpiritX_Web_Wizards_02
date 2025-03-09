@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    default: "user",
+  },
   budget: {
     type: Number,
     default: 9000000, // Rs. 9,000,000 initial budget
