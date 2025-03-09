@@ -287,10 +287,8 @@ export const getTeam = async (req, res) => {
 
 // Controller to get team rank
 export const getTeamRank = async (req, res) => {
-  console.log("getTeamRank", req.user);
   try {
-    console.log("getTeamRank", req.user);
-    const userId = req.user.id;
+    const userId = req.user._id;
     const team = await Team.findOne({ userId }).populate("players");
 
     if (!team) {
