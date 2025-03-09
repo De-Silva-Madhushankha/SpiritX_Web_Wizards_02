@@ -284,4 +284,54 @@ export const getTeam = async (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   };
+
+export const getTeamRank = async (req, res) => {
+  try {
+    condole.log("getTeamRank");
+    const user = req.body;
+    const userId = user._id;
+    console.log(userId);
+
+    // Find the user's team
+    const team = await Team.findOne({ userId }).populate("players");
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+  
+    // Calculate total points of the team
+    let totalPoints = 0;
+    team.players.forEach(player => {
+      const playerStats = calculatePlayerStats(player);
+      totalPoints += playerStats.playerPoints;
+    });
+
+    // Find all teams
+    const allTeams = await Team.find().populate("players");
+    if (!allTeams) {
+      return res.status(404).json({ message: "Teams not found" });
+    }
+
+    // Calculate total points for all teams 
+    const teamPoints = allTeams.map(team => {
+      let totalPoints = 0;
+      team.players.forEach(player => {
+        const playerStats = calculatePlayerStats(player);
+        totalPoints += playerStats.playerPoints;
+      });
+      return { userId: team.userId, totalPoints };
+    });
+
+    // Sort teams by total points
+    teamPoints.sort((a, b) => b.totalPoints - a.totalPoints);
+
+    // Find the rank of the user's team
+    const userRank = teamPoints.findIndex(team => team.userId.toString() === userId) + 1;
+
+    res.status(200).json({ rank: userRank, totalPoints });
+  }
+  catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
   

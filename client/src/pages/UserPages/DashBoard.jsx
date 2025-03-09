@@ -1,8 +1,41 @@
 import React from 'react'
 import Navbar from '../../components/Navbar'
 import { Trophy, MoveUp, MoveDown, Signal, CirclePlus, Wallet } from 'lucide-react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 const DashBoard = () => {
+
+  const [teamRank, setTeamRank] = useState("");
+
+  useEffect(() => {
+    const fetchTeamRank = async () => {
+      try {
+        const response = await axios.get('/team/teamRank/', { withCredentials: true });
+        console.log(response.data);
+        const rank = response.data;
+        if (Array.isArray(data)) {
+          setTeamRank(data);
+        } else {
+          console.error('API response');
+          toast.error('Unexpected API response');
+        }
+      } catch (err) {
+        console.error('Error fetching team rank:', err);
+        toast.error('Failed to fetch team rank');
+      }
+    };
+    fetchTeamRank();
+  }, []);
+
+
+  const totalPoints = axios.get('/api/team/points/:userId', { withCredentials: true }).then(res => res.data); 
+
+
+
+  const teamValue = 9.2;
+  const remainingBudget = 0.8;
+  
   return (
     <div>
       <Navbar/>
