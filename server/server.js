@@ -38,12 +38,10 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => console.error("❌ MongoDB connection error:", error));
 
-// Socket.IO connection handler
 io.on("connection", (socket) => {
   console.log("✅ A user connected");
 
@@ -60,6 +58,10 @@ io.on("connection", (socket) => {
 // API Routes
 app.use("/api/player", playerRoutes);
 app.use("/api/chatbot", chatBotRouter);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the IPL Fantasy API");
+});
 
 // Start server
 server.listen(PORT, () => {
