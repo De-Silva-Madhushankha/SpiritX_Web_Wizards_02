@@ -6,6 +6,33 @@ import { errorHandler } from '../utils/errorHandler.js';
 import { generateTokenAndSetCookie, clearCookie } from '../utils/jwtUtils.js';
 import { sendEmail } from '../utils/sendEmail.js';
 
+export const getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const checkUsername = async (req, res, next) => {
+  try {
+    const { username } = req.query;
+    const user = await User
+      .findOne({ username })
+      .select('username');
+    console.log(user);
+    if (user) { 
+      res.status(200).json({ available: false });
+    } else {
+      res.status(200).json({ available: true });
+    }   
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
 export const checkUsername = async (req, res, next) => {
   try {
     const { username } = req.query;
@@ -36,7 +63,6 @@ export const signup = async (req, res, next) => {
       password: hashedPassword,
       budget: 9000000,
       points: 0,
-      team: [],
     });
 
     await user.save();
@@ -157,4 +183,6 @@ export const resetPassword = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to reset password." });
   }
-};
+}
+
+

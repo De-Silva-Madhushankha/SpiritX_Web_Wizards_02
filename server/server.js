@@ -7,11 +7,12 @@ import http from "http"; // Import http module to integrate Socket.IO with Expre
 import { Server } from "socket.io"; // Correct import for socket.io
 
 // Importing routes
-import playerRoutes from "./routes/playerRoutes.js";
 import statRoutes from "./routes/statRoutes.js";
 import teamRoutes from "./routes/teamRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import playerRoutes from "./routes/playerRoutes.js";
+import chatBotRouter from "./routes/chatBotRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -34,7 +35,7 @@ app.use(cookieParser());
 // Create HTTP server to work with Socket.IO
 const server = http.createServer(app);
 
-// Initialize Socket.IO server
+// Initialize Socket.IO with CORS options
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -55,10 +56,9 @@ app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => console.error("❌ MongoDB connection error:", error));
-
 
 // Socket.IO connection handler
 io.on("connection", (socket) => {
@@ -73,6 +73,10 @@ io.on("connection", (socket) => {
     socket.emit("serverMessage", "Hello from the server!");
   }, 5000);
 });
+
+// API Routes
+app.use("/api/player", playerRoutes);
+app.use("/api/chatbot", chatBotRouter);
 
 // Start server
 server.listen(PORT, () => {

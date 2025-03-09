@@ -2,10 +2,10 @@
 export const calculatePlayerStats = (playerData) => {
     // Ensure playerData exists and has required fields
     console.log(playerData);
-    console.log(playerData.TotalRuns);
-    console.log(playerData.BallsFaced);
+    console.log(playerData.totalRuns);
+    console.log(playerData.ballsFaced);
 
-    if (!playerData || !playerData.TotalRuns || !playerData.BallsFaced){
+    if (!playerData || !playerData.totalRuns || !playerData.ballsFaced){
     
         return {
             playerPoints: 0,
@@ -18,28 +18,30 @@ export const calculatePlayerStats = (playerData) => {
     }
 
     // Convert overs to balls (1 over = 6 balls)
-    const ballsBowled = playerData.OversBowled *6 ;
-
+    const ballsBowled = playerData.oversBowled *6 ;
+    console.log(ballsBowled);
     // Batting Calculations
-    const battingStrikeRate = playerData.BallsFaced > 0 
-        ? (playerData.TotalRuns / playerData.BallsFaced) * 100 
+    const battingStrikeRate = playerData.ballsFaced > 0 
+        ? (playerData.totalRuns / playerData.ballsFaced) * 100 
         : 0;
+
+        console.log(battingStrikeRate);
     
-    const battingAverage = playerData.InningsPlayed > 0 
-        ? playerData.TotalRuns / playerData.InningsPlayed 
+    const battingAverage = playerData.inningsPlayed > 0 
+        ? playerData.totalRuns / playerData.inningsPlayed 
         : 0;
 
     const battingPoints = (battingStrikeRate / 5) + (battingAverage * 0.8);
 
     // Bowling Calculations
     let bowlingStrikeRateContribution = 0;
-    if (playerData.Wickets > 0 && ballsBowled > 0) {
-        const bowlingStrikeRate = ballsBowled / playerData.Wickets;
+    if (playerData.wickets > 0 && ballsBowled > 0) {
+        const bowlingStrikeRate = ballsBowled / playerData.wickets;
         bowlingStrikeRateContribution = 500 / bowlingStrikeRate;
     }
 
     const economyRate = ballsBowled > 0 
-        ? (playerData.RunsConceded / ballsBowled) * 6 
+        ? (playerData.runsConceded / ballsBowled) * 6 
         : 0;
     
     const economyRateContribution = economyRate > 0 
@@ -60,8 +62,8 @@ export const calculatePlayerStats = (playerData) => {
         playerValue: roundedValue, // Rounded player value to nearest 50000
         playerBattingStrikeRate: Number(battingStrikeRate.toFixed(2)),
         playerBattingAverage: Number(battingAverage.toFixed(2)),
-        playerBowlingStrikeRate: ballsBowled > 0 && playerData.Wickets > 0
-            ? Number((ballsBowled / playerData.Wickets).toFixed(2))
+        playerBowlingStrikeRate: ballsBowled > 0 && playerData.wickets > 0
+            ? Number((ballsBowled / playerData.wickets).toFixed(2))
             : 0,
         playerEconomyRate: Number(economyRate.toFixed(2)),
     };
