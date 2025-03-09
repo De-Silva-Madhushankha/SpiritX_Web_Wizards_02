@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import ForgotPassword from './pages/ForgotPassword';
 import UserDashBoard from './pages/UserPages/DashBoard';
 import AdminDashBoard from './pages/AdminPages/DashBoard';
+import Spiriter from './pages/Spiriter/Spiriter';
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
 axios.defaults.withCredentials = true;
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/*" element={<NotFound />} />
         <Route path="/user/dashboard" element={<UserDashBoard />} />
+        <Route path="/spiriter" element={<Spiriter />} />
 
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
