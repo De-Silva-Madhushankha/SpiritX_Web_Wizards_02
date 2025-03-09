@@ -23,9 +23,9 @@ export const checkUsername = async (req, res, next) => {
       .select('username');
     console.log(user);
     if (user) { 
-      res.status(200).json({ available: true });
-    } else {
       res.status(200).json({ available: false });
+    } else {
+      res.status(200).json({ available: true });
     }   
   }
   catch (error) {
