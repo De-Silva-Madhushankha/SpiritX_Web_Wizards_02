@@ -1,5 +1,5 @@
 import express from "express";
-import { addPlayerToTeam, removePlayerFromTeam, calculateTeamPoints, getUserTeam ,getTeam , getCurrentTeam, getTeamRank} from "../controllers/teamController.js";
+import { addPlayerToTeam, removePlayerFromTeam, calculateTeamPoints, getUserTeam, getTeam, getCurrentTeam, getTeamRank, getTotalPoints, getTeamValue, getRemainingBudget, getRecentPerformance } from "../controllers/teamController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -17,6 +17,11 @@ router.get("/finalTeam/:userId", getTeam);
 router.get("/currentTeam/:userId", getCurrentTeam);
 
 router.get("/teamRank", authMiddleware, getTeamRank);
+router.get("/totalPoints", authMiddleware, getTotalPoints);
+router.get("/teamValue", authMiddleware, getTeamValue);
+router.get("/remainingBudget", authMiddleware, getRemainingBudget);
+router.get("/recentPerformance", authMiddleware, getRecentPerformance);
+
 
 router.get("/" ,authMiddleware, (req, res) => {
     res.send("Team routes");

@@ -31,7 +31,7 @@ const DashBoard = () => {
 
     const fetchTotalPoints = async () => {
       try {
-        const response = await axios.get('/api/team/points/', { withCredentials: true });
+        const response = await axios.get('/team/points/', { withCredentials: true });
         setTotalPoints(response.data.totalPoints);
       } catch (err) {
         console.error('Error fetching total points:', err);
@@ -41,7 +41,7 @@ const DashBoard = () => {
 
     const fetchTeamValue = async () => {
       try {
-        const response = await axios.get('/api/team/value/', { withCredentials: true });
+        const response = await axios.get('/team/value/', { withCredentials: true });
         setTeamValue(response.data.teamValue);
       } catch (err) {
         console.error('Error fetching team value:', err);
@@ -51,7 +51,7 @@ const DashBoard = () => {
 
     const fetchRemainingBudget = async () => {
       try {
-        const response = await axios.get('/api/team/budget/', { withCredentials: true });
+        const response = await axios.get('/team/budget/', { withCredentials: true });
         setRemainingBudget(response.data.remainingBudget);
       } catch (err) {
         console.error('Error fetching remaining budget:', err);
@@ -61,7 +61,7 @@ const DashBoard = () => {
 
     const fetchRecentPerformance = async () => {
       try {
-        const response = await axios.get('/api/team/recentPerformance/', { withCredentials: true });
+        const response = await axios.get('/team/recentPerformance/', { withCredentials: true });
         setRecentPerformance(response.data.recentPerformance);
       } catch (err) {
         console.error('Error fetching recent performance:', err);
