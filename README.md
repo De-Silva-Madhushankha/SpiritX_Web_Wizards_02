@@ -22,7 +22,7 @@ SpiritX_Web_Wizards_02, also known as **Spirit11**, is a fantasy cricket league 
     ```sh
     pnpm install
     ```
-3. Start the development server:
+3. Start the client development:
     ```sh
     pnpm run dev
     ```
@@ -40,15 +40,18 @@ SpiritX_Web_Wizards_02, also known as **Spirit11**, is a fantasy cricket league 
     ```
 3. Set up environment variables:
     - Copy `.env.example` to `.env` and update the values as needed.
-4. Add sample data to the database (optional):
+    - You need a gemini API key and a MongoDB connection string
+4. Add sample data to the database:
     ```sh
     node addSampleDataToDB.js
     ```
 5. Start the server:
     ```sh
-    pnpm start
+    pnpm run start
     ```
-6. The server will be running on `http://localhost:5000`.
+6. The server will be running on `http://localhost:4000`.
+
+**Note** Depending on your setup and development environment, ports might vary. Please make sure to update cors policies (at server.js), VITE_BASE_URL(at client .env)
 
 ## Database Setup & Configuration
 
