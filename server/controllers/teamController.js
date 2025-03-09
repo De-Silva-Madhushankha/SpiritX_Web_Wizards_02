@@ -284,4 +284,116 @@ export const getTeam = async (req, res) => {
       res.status(500).json({ message: "Server error" });
     }
   };
+
+// Controller to get team rank
+export const getTeamRank = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const team = await Team.findOne({ userId }).populate("players");
+
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+
+    const allTeams = await Team.find().populate("players");
+    const teamPoints = allTeams.map(team => {
+      let totalPoints = 0;
+      team.players.forEach(player => {
+        const playerStats = calculatePlayerStats(player);
+        totalPoints += playerStats.playerPoints;
+      });
+      return { userId: team.userId, totalPoints };
+    });
+
+    teamPoints.sort((a, b) => b.totalPoints - a.totalPoints);
+    const userRank = teamPoints.findIndex(team => team.userId.toString() === userId.toString()) + 1;
+
+    res.status(200).json(userRank);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Controller to get total points
+export const getTotalPoints = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const team = await Team.findOne({ userId }).populate("players");
+
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+
+    let totalPoints = 0;
+    team.players.forEach(player => {
+      const playerStats = calculatePlayerStats(player);
+      totalPoints += playerStats.playerPoints;
+    });
+
+    res.status(200).json({ totalPoints });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Controller to get team value
+export const getTeamValue = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const team = await Team.findOne({ userId }).populate("players");
+
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+
+    let teamValue = 0;
+    team.players.forEach(player => {
+      teamValue += player.value;
+    });
+
+    res.status(200).json({ teamValue });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Controller to get remaining budget
+export const getRemainingBudget = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const remainingBudget = user.budget;
+    res.status(200).json({ remainingBudget });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Controller to get recent performance
+export const getRecentPerformance = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const team = await Team.findOne({ userId }).populate("players");
+
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+
+    const recentPerformance = team.players.map(player => ({
+      title: player.name,
+      date: new Date().toLocaleDateString(),
+      points: calculatePlayerStats(player).playerPoints
+    }));
+
+    res.status(200).json({ recentPerformance });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
   

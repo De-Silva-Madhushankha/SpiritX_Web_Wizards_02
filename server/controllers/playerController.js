@@ -200,8 +200,6 @@ export const deletePlayer = async (req, res) => {
     }
 };
 
-
-
 export const searchPlayers = async (req, res) => {
     try {
       const searchQuery = req.query.q; 

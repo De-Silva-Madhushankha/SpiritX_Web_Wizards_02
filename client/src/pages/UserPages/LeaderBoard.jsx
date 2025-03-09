@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Navbar from '../../components/Navbar';
+import axios from 'axios';
 
 const Leaderboard = () => {
-    const leaderboardData = [
-        { rank: 1, name: 'CricketMaster', value: '$9.8M', points: 3450 },
-        { rank: 2, name: 'BowlingWizard', value: '$9.7M', points: 3380 },
-        { rank: 3, name: 'BattingKing', value: '$9.9M', points: 3320 },
-        { rank: 4, name: 'AllRounderPro', value: '$9.6M', points: 3290 },
-        { rank: 5, name: 'CricketLegend', value: '$9.8M', points: 3240 },
-        { rank: '...', name: '...', value: '...', points: '...' },
-        { rank: 42, name: 'YourTeamName', value: '$9.2M', points: 2345 },
-    ];
+    const user = useSelector((state) => state.auth.user);
+    const [userRank, setUserRank ] = useState(null);
+    const [leaderboardData, setLeaderboardData] = useState(null);
+
+    useEffect(() => {
+        if (!user) return;
+
+        const fetchLeaderboard = async () => {
+            try {
+                const response = await axios.get(`/user/leaderboard/${user._id}`);
+                setLeaderboardData(response.data.leaderboard);
+                setUserRank(response.data.leaderboard.findIndex((team) => team._id === user._id) + 1);
+            } catch (error) {
+                console.error('Failed to fetch team data:', error);
+            }
+        };
+        fetchLeaderboard();
+    }, [user]);
 
     // Function to determine background and text colors based on rank
     const getRankStyles = (rank) => {
         if (rank === 1) return "bg-blue-500 text-white";
         if (rank === 2) return "bg-sky-400 text-white";
         if (rank === 3) return "bg-sky-200 text-white";
-        if (rank === 42) return "bg-amber-200 text-gray-800";
+        if (rank === userRank) return "bg-amber-200 text-gray-800";
         return "bg-gray-200 text-black";
     };
 
@@ -35,24 +46,23 @@ const Leaderboard = () => {
                     <h1 className="text-3xl font-bold text-gray-100 mb-6">Leaderboard</h1>
                     <div className="bg-white rounded-xl shadow-md overflow-hidden p-6">
                         <div className="overflow-hidden">
-                            {leaderboardData.map((team, index) => (
+                            {leaderboardData?.map((team, index) => (
                                 <div
                                     key={index}
-                                    className={`${team.rank === 42 ? 'bg-gray-100' : ''
+                                    className={`${index+1 === userRank ? 'bg-gray-100' : ''
                                         } border-b border-gray-100 hover:bg-gray-50 transition-colors`}
                                 >
                                     <div className="flex items-center py-4">
                                         <div className="w-12 flex-shrink-0 flex justify-center">
-                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${getRankStyles(team.rank)}`}>
-                                                <span className="text-sm font-medium">{team.rank}</span>
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${getRankStyles(index + 1)}`}>
+                                                <span className="text-sm font-medium">{index + 1}</span>
                                             </div>
                                         </div>
                                         <div className="flex-grow">
-                                            <h3 className="font-medium text-gray-900">{team.name}</h3>
-                                            <p className="text-xs text-gray-500">Team Value: {team.value}</p>
+                                            <h3 className="font-medium text-gray-900">{team.username}</h3>
                                         </div>
                                         <div className="flex-shrink-0 w-32 text-right">
-                                            <span className="font-semibold text-gray-800">{team.points} pts</span>
+                                            <span className="font-semibold text-sky-600">{team.points} pts</span>
                                         </div>
                                     </div>
                                 </div>
