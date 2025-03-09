@@ -43,10 +43,6 @@ const io = new Server(server, {
   },
 });
 
-// Default route
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 // API Routes
 app.use("/api/player", playerRoutes);
@@ -54,13 +50,12 @@ app.use("/api/overallstat", statRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/chatbot", chatBotRouter);
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((error) => console.error("❌ MongoDB connection error:", error));
 
-// Socket.IO connection handler
 io.on("connection", (socket) => {
   console.log("✅ A user connected");
 
@@ -74,9 +69,10 @@ io.on("connection", (socket) => {
   }, 5000);
 });
 
-// API Routes
-app.use("/api/player", playerRoutes);
-app.use("/api/chatbot", chatBotRouter);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the IPL Fantasy API");
+});
 
 // Start server
 server.listen(PORT, () => {
